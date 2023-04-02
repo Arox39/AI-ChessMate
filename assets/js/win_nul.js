@@ -32,7 +32,7 @@ export function win_nul(board,coup_precedant,coup){
 
     if (whitePieces.length === 1 && blackPieces.length === 1) {
         // Il ne reste que des rois
-        return -1;
+        win = -1
     }
 
     if (whitePieces.length === 2 && blackPieces.length === 2) {
@@ -41,7 +41,7 @@ export function win_nul(board,coup_precedant,coup){
         let blackBishopOrKnight = blackPieces.find(piece => piece.type === 'bishop' || piece.type === 'knight');
         // L'autre piece restante et un roi ou un cavalier
         if (whiteBishopOrKnight && blackBishopOrKnight) {
-            return -1;
+            win = -1
         }
     }
 
