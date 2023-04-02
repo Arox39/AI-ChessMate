@@ -1,6 +1,5 @@
 import {check} from './check.js'
 
-
 function arrayEqual(a, b) {
     if (a.length !== b.length) {
         return false;
@@ -12,10 +11,10 @@ function arrayEqual(a, b) {
     }
     return true;
 }
+
 export function win_nul(board,coup_precedant,coup){
     /*
-    parametre:la flemme
-    fonction qui retourne -1,0,1 == nul , rien , victoire
+    Fonction qui retopurne -1 si nul, 0 si rien et 1 si victoire
     */
     let win = 0
     if (arrayEqual(coup, [])) {
@@ -26,5 +25,25 @@ export function win_nul(board,coup_precedant,coup){
             win = 1
         }
     }
-    return win 
+
+    let pieces = board.reduce((acc, row) => acc.concat(row), []).filter(piece => piece !== null);
+    let whitePieces = pieces.filter(piece => piece.color === 'white');
+    let blackPieces = pieces.filter(piece => piece.color === 'black');
+
+    if (whitePieces.length === 1 && blackPieces.length === 1) {
+        // Il ne reste que des rois
+        return -1;
+    }
+
+    if (whitePieces.length === 2 && blackPieces.length === 2) {
+        // Il ne reste que des rois et une autre piece
+        let whiteBishopOrKnight = whitePieces.find(piece => piece.type === 'bishop' || piece.type === 'knight');
+        let blackBishopOrKnight = blackPieces.find(piece => piece.type === 'bishop' || piece.type === 'knight');
+        // L'autre piece restante et un roi ou un cavalier
+        if (whiteBishopOrKnight && blackBishopOrKnight) {
+            return -1;
+        }
+    }
+
+    return win;
 }
