@@ -174,6 +174,7 @@ async function cellListener() {
       else if(arrayEqual(departPiece, [rowRook, 4]) && arrayEqual(destinationPiece, [rowRook, 6])){
         playMove([[rowRook, 7], [rowRook, 5]])
       }
+      refreshBoard(board)
       if(arrayEqual(departPiece, [0,4])) moveBking = 1
       if(arrayEqual(departPiece, [7,4])) moveWking = 1
       if(arrayEqual(departPiece, [0,0])) moveBRook0 = 1
@@ -196,24 +197,18 @@ async function cellListener() {
         // Vérifier s'il y a échec et mat
         let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
         if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
-          refreshBoard(board)
           endgame(currentPlayer)
-        } else if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
-          refreshBoard(board)
-          console.log('draw');
-          endgame('draw')
         }
       }
       else{
-
-        let king = document.querySelector(`td[data-piece='king'][data-color=${currentPlayer}]`)
-        king.classList.remove('check')
+        console.log(currentPlayer);
+        let check = document.querySelector('.check')
+        if(check) check.classList.remove('check')
         // verifier si il y a nul
         let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
         let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
         if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
           refreshBoard(board)
-          console.log('draw');
           endgame('draw')
         }
       }
@@ -280,6 +275,8 @@ rematchBtn.forEach(element => {
   possibleMoves.forEach(possibleElement => {
     possibleElement.classList.remove('possibleMove')
   })
+  let check = document.querySelector('.check')
+  if(check) check.classList.remove('check')
   let endgameElement = document.querySelector('.endgame')
   endgameElement.classList.add('hide')
   board = [[-4,-3,-2,-8,-255,-2,-3,-4],[-1,-1,-1,-1,-1,-1,-1,-1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],

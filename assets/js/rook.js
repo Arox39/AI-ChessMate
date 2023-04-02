@@ -9,6 +9,9 @@ export function grand_rook(board, nb_m_roi, nb_m_tour0, color){
     let row = color === 'white' ? 7 : 0
     let rook = true
     
+
+    // verifier que la tour existe 
+    if(board[row][0] === 0) rook = false
     // Vérifier si le nombre de mouvements du roi et de la tour est égal à 0
     if(nb_m_roi !== 0 || nb_m_tour0 !== 0){
         rook = false
@@ -30,13 +33,12 @@ export function petit_rook(board, nb_m_roi, nb_m_tour7, color){
     */
     let row = color === 'white' ? 7 : 0
     let rook = true
-    if (nb_m_roi !== 0){
-        rook = false
-    }
+    // verifier que la tour existe
+    if(board[row][7] === 0) rook = false
 
-    if (nb_m_tour7 !== 0){
-        rook = false
-    }
+    if (nb_m_roi !== 0) rook = false
+
+    if (nb_m_tour7 !== 0) rook = false
 
     for (let i = 5; i < 7; i++){
         if (board[row][i] !== 0){

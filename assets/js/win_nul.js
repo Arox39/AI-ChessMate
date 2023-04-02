@@ -25,25 +25,34 @@ export function win_nul(board,coup_precedant,coup){
             win = 1
         }
     }
+    let whitePieces = document.querySelectorAll("td[data-color = white]");
+    let blackPieces = document.querySelectorAll("td[data-color = black]");
 
-    let pieces = board.reduce((acc, row) => acc.concat(row), []).filter(piece => piece !== null);
-    let whitePieces = pieces.filter(piece => piece.color === 'white');
-    let blackPieces = pieces.filter(piece => piece.color === 'black');
 
-    if (whitePieces.length === 1 && blackPieces.length === 1) {
+    let blackBishopOrKnight;
+    let whiteBishopOrKnight
+
+    console.log(whitePieces[0]);
+    if (whitePieces.length === 2 || blackPieces.length === 2) {
+        // Il ne reste que des rois et une autre piece
+        if(whitePieces[0].dataset.piece === 'bishop' || whitePieces[1].dataset.piece === 'bishop'||  
+        whitePieces[0].dataset.piece === 'knight' || whitePieces[1].dataset.piece === 'knight'){
+            whiteBishopOrKnight = true
+        }
+        else if(blackPieces[0].dataset.piece === 'bishop' || blackPieces[1].dataset.piece === 'bishop'||  
+        blackPieces[0].dataset.piece === 'knight' || blackPieces[1].dataset.piece === 'knight'){
+            blackBishopOrKnight = true
+        }
+        
+    }
+    // L'autre piece restante et un roi ou un cavalier
+    if (whiteBishopOrKnight && blackBishopOrKnight || blackBishopOrKnight && whitePieces.length === 1) {
+        win = -1
+    }
+    if (whitePieces.length === 1 && blackPieces.length === 1 || whiteBishopOrKnight && blackPieces.length === 1) {
         // Il ne reste que des rois
         win = -1
     }
-
-    if (whitePieces.length === 2 && blackPieces.length === 2) {
-        // Il ne reste que des rois et une autre piece
-        let whiteBishopOrKnight = whitePieces.find(piece => piece.type === 'bishop' || piece.type === 'knight');
-        let blackBishopOrKnight = blackPieces.find(piece => piece.type === 'bishop' || piece.type === 'knight');
-        // L'autre piece restante et un roi ou un cavalier
-        if (whiteBishopOrKnight && blackBishopOrKnight) {
-            win = -1
-        }
-    }
-
+    console.log(win);
     return win;
 }
