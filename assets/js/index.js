@@ -46,12 +46,25 @@ function switchPlayer() {
 }
 
 // fonction appelée à la fin du jeu pour désactiver les clics sur les cases
-function endgame() {
-  console.log("End of game");
+function endgame(winner) {
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
     cell.removeEventListener('click', cellListener)
   })
+  let endgameElement = document.querySelector('.endgame')
+  endgameElement.classList.toggle('hide')
+  let endgameTitle = document.getElementById('endgame-title')
+  let title;
+  if(winner === 'draw'){
+    title = 'Egaliter !'
+  }
+  else if(winner === 'white'){
+    title = 'Les blancs ont gagner !'
+  }
+  else{
+    title = 'Les noirs ont gagner !'
+  }
+  endgameTitle.textContent = title
   return;
 }
 
@@ -67,6 +80,7 @@ function playMove(move) {
 
 // fonction principale du jeu
 function game(){
+  refreshBoard(board)
   // récupération des cases appartenant au joueur courant
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
@@ -86,9 +100,8 @@ let departPiece
 game()
 
 async function cellListener() {
-  // Vérifier si la pièce sélectionnée appartient au joueur courant
+    // Vérifier si la pièce sélectionnée appartient au joueur courant
   if (this.dataset.color === currentPlayer) {
-
     // Supprimer les coups possibles affichés précédemment
     let possibleMoves = document.querySelectorAll('.possibleMove')
     possibleMoves.forEach(possibleElement => {
@@ -134,23 +147,19 @@ async function cellListener() {
       mRook7 = moveBRook7
       rowRook = 0
     }
-    if(petit_rook(board, mKing, mRook7 ,currentPlayer)) console.log('1231');
     if(petit_rook(board, mKing, mRook7, currentPlayer) && this.dataset.piece === 'king' && 
     !(elementInArray([rowRook, 6], adverseLegalMoves))){
-      console.log('oueah');
       possibleMove.push([rowRook, 6])
       document.getElementById(`${rowRook}-6`).classList.add('possibleMove')
     }
     if(grand_rook(board, mKing, mRook0, currentPlayer) && this.dataset.piece === 'king' && 
     !(elementInArray([rowRook, 2], adverseLegalMoves))){
-      console.log('audhgf');
       possibleMove.push([rowRook, 2])
       document.getElementById(`${rowRook}-2`).classList.add('possibleMove')
       
     }
     // Attendre que le joueur sélectionne une destination parmi les coups possibles
     let destinationPiece = await getDestination(possibleMove)
-
     // Vérifier si la destination sélectionnée est légale et jouer le coup si c'est le cas
     if (elementInArray(destinationPiece, possibleMove)) {
       
@@ -184,19 +193,29 @@ async function cellListener() {
         let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
         king.classList.add('check')
 
-        // Vérifier s'il y a échec et mat ou nul
+        // Vérifier s'il y a échec et mat
         let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
         if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
           refreshBoard(board)
-          endgame()
+          endgame(currentPlayer)
         } else if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
           refreshBoard(board)
-          endgame()
+          console.log('draw');
+          endgame('draw')
         }
       }
       else{
+
         let king = document.querySelector(`td[data-piece='king'][data-color=${currentPlayer}]`)
         king.classList.remove('check')
+        // verifier si il y a nul
+        let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
+        let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
+        if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
+          refreshBoard(board)
+          console.log('draw');
+          endgame('draw')
+        }
       }
       // Rafraîchir l'affichage du plateau
       refreshBoard(board)
@@ -218,13 +237,13 @@ async function cellListener() {
 
 // Fonction qui permet de récupérer la destination choisie par le joueur parmi les mouvements possibles
 function getDestination(possibleMove){
+  console.log(possibleMove);
   let promises = [];
   possibleMove.forEach(element => {
 
     // On crée une promesse pour chaque mouvement possible
     let promise = new Promise(resolve => {
       let possibleElement = document.getElementById(`${element[0]}-${element[1]}`)
-
       // On ajoute un écouteur d'événement click sur chaque case de destination possible
       possibleElement.addEventListener('click', (e) => {
         if(possibleElement.classList.contains('possibleMove')){
@@ -233,10 +252,39 @@ function getDestination(possibleMove){
         }
       })
     });
-
     promises.push(promise);
   });
 
   // On retourne la promesse qui est résolue lorsqu'une case de destination est cliquée
   return Promise.race(promises);
 }
+
+let rematchBtn = document.querySelectorAll('.rematch')
+rematchBtn.forEach(element => {
+  element.addEventListener('click', () => {
+  // Réinitialisation des variables de jeu
+  board = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+  refreshBoard(board)
+  currentPlayer = 'white'
+  coup_precedant = [[0,0], [0,0]]
+  moveBking = 0
+  moveWking = 0
+  moveBRook0 = 0
+  moveWRook0 = 0
+  moveBRook7 = 0
+  moveWRook7 = 0
+
+  // Suppression des coups possibles affichés précédemment
+  let possibleMoves = document.querySelectorAll('.possibleMove')
+  possibleMoves.forEach(possibleElement => {
+    possibleElement.classList.remove('possibleMove')
+  })
+  let endgameElement = document.querySelector('.endgame')
+  endgameElement.classList.toggle('hide')
+  board = [[-4,-3,-2,-8,-255,-2,-3,-4],[-1,-1,-1,-1,-1,-1,-1,-1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1],[4,3,2,8,255,2,3,4]]
+  // Réinitialisation du jeu
+  game()  
+  })
+})

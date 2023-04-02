@@ -31,21 +31,17 @@ export function petit_rook(board, nb_m_roi, nb_m_tour7, color){
     let row = color === 'white' ? 7 : 0
     let rook = true
     if (nb_m_roi !== 0){
-        console.log(1);
         rook = false
     }
 
     if (nb_m_tour7 !== 0){
-        console.log(2);
         rook = false
     }
 
     for (let i = 5; i < 7; i++){
         if (board[row][i] !== 0){
-            console.log(board[row][i]);
             rook = false
         }
     }
-    console.log(rook);
     return rook
 }
