@@ -56,13 +56,13 @@ function endgame(winner) {
   let endgameTitle = document.getElementById('endgame-title')
   let title;
   if(winner === 'draw'){
-    title = 'Egaliter !'
+    title = 'Égalité !'
   }
   else if(winner === 'white'){
-    title = 'Les blancs ont gagner !'
+    title = 'Les blancs ont gagnés !'
   }
   else{
-    title = 'Les noirs ont gagner !'
+    title = 'Les noirs ont gagnés !'
   }
   endgameTitle.textContent = title
   return;
