@@ -281,10 +281,16 @@ rematchBtn.forEach(element => {
     possibleElement.classList.remove('possibleMove')
   })
   let endgameElement = document.querySelector('.endgame')
-  endgameElement.classList.toggle('hide')
+  endgameElement.classList.add('hide')
   board = [[-4,-3,-2,-8,-255,-2,-3,-4],[-1,-1,-1,-1,-1,-1,-1,-1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1],[4,3,2,8,255,2,3,4]]
   // Réinitialisation du jeu
   game()  
   })
+})
+
+let cross = document.querySelector('.x-mark')
+cross.addEventListener('click', () => {
+  let endgameElement = document.querySelector('.endgame')
+  endgameElement.classList.add('hide')
 })
