@@ -8,25 +8,31 @@ body
 {
     height: 100vh;
     width: 100vw;
+    display: flex;
+    justify-content: center;
 }
 table#chessboard {
     border-collapse: collapse;
     border-radius: 10px;
-    width: 90vh;
-    height: 90vh;
-    position: absolute;
-    top: 50%;
+    margin: auto;
+    /* width: 90vh;
+    height: 90vh; */
+    /* position: absolute; */
+    /* top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); */
 }
   
   td {
-    width: 50px;
-    height: 50px;
+    width: 11vh;
+    height: 11vh;
     font-size: 32px;
     text-align: center;
     vertical-align: middle;
     background-size: 100%;
+    background-repeat: no-repeat;
+    max-width: 800px;
+    max-height: 800px;
   }
   
   td.white {
@@ -113,8 +119,8 @@ table#chessboard {
   border: 2px solid black;
   border-radius: 50%;
   margin: 0 auto;
-  width: 30px;
-  height: 30px;
+  width: 35%;
+  height: 35%;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .check {
@@ -177,18 +183,17 @@ table#chessboard {
 } 
 .rematch
 {
-  border-radius: 10px;
+  border-radius: 0 0 0 10px;
   color: #f8f8f8;
   background-color: #393737;
   border: none;
   cursor: pointer;
   font-size: 1em;
   position: absolute;
-  width: 20vw;
   height: 10vh;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 50px;
+  width: 10vh;
+  top: 0;
+  right: 0;
 }
 .rematch:hover
 {
@@ -196,3 +201,34 @@ table#chessboard {
   border: 2px solid #393737;
   color: #393737;
 }
+@media only screen and (max-width: 824px) {
+  td {
+  width: calc((100vw) / 10);
+  height: calc((100vw) / 10);
+  font-size: 4.5vw;
+  }
+
+  table#chessboard{
+    position: absolute;
+    top:0;
+    margin: auto;
+  }
+  .rematch{
+    position: absolute;
+    width: 100vw;
+    top: 100%;
+    transform: translateY(-100%);
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+  }
+  
+  @media only screen and (max-width: 480px) {
+    table#chessboard{
+      position: absolute;
+      top:50%;
+      transform: translateY(-75%);
+      margin: auto;
+    }
+  }
