@@ -38,10 +38,13 @@ function elementInArray(element, array) {
 
 // fonction pour passer au joueur suivant
 function switchPlayer() {
+  let indication = document.querySelector('.current-player')
     if (currentPlayer === 'white') {
         currentPlayer = 'black'
+        indication.dataset.color = 'black'
     } else {
         currentPlayer = 'white'
+        indication.dataset.color = 'white'
     }
 }
 
@@ -201,7 +204,6 @@ async function cellListener() {
         }
       }
       else{
-        console.log(currentPlayer);
         let check = document.querySelector('.check')
         if(check) check.classList.remove('check')
         // verifier si il y a nul
@@ -232,7 +234,6 @@ async function cellListener() {
 
 // Fonction qui permet de récupérer la destination choisie par le joueur parmi les mouvements possibles
 function getDestination(possibleMove){
-  console.log(possibleMove);
   let promises = [];
   possibleMove.forEach(element => {
 

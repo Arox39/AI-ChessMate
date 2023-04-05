@@ -32,7 +32,6 @@ export function win_nul(board,coup_precedant,coup){
     let blackBishopOrKnight;
     let whiteBishopOrKnight
 
-    console.log(whitePieces.length, blackPieces.length);
     if (whitePieces.length === 2) {
         // Il ne reste que des rois et une autre piece
         if(whitePieces[0].dataset.piece === 'bishop' || whitePieces[1].dataset.piece === 'bishop'||  
@@ -47,7 +46,6 @@ export function win_nul(board,coup_precedant,coup){
         }
         
     }
-    console.log(blackBishopOrKnight, whiteBishopOrKnight);
     // L'autre piece restante et un roi ou un cavalier
     if (whiteBishopOrKnight && blackBishopOrKnight || blackBishopOrKnight && whitePieces.length === 1) {
         win = -1
