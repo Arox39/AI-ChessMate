@@ -19,8 +19,7 @@ export function check(board,coup_precedant, color){
     let isCheck = false
     let king = []
     //donne tout les coups que' a une piece si elle pouvais bouger 2 fois
-    
-    let controle_de_case = move(board,coup_precedant[1][0],coup_precedant[1][1], color)
+    let controle_de_case = move(board,coup_precedant[1][0],coup_precedant[1][1], coup_precedant)
 
     for (let row = 0; row < 8; row++){
         for (let col = 0; col < 8; col++){

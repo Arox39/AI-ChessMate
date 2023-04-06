@@ -46,7 +46,7 @@ export function anti_suicide(board,coup_precedant, color){
         for(let col = 0; col < 8; col++){
             if (board[row][col] === kingValue){
                 king = [row,col]
-                coup_roi = move(board,row,col,coup_precedant, color)
+                coup_roi = move(board,row,col,coup_precedant)
             }
         }
 
@@ -61,7 +61,7 @@ export function anti_suicide(board,coup_precedant, color){
         for(let r = 0; r < 8; r++){
             for (let c = 0; c < 8; c++){
                 if (pieceAdverse(board[r][c])){
-                    coup.push(...move(board,r,c,coup_precedant, colorInverse))
+                    coup.push(...move(board,r,c,coup_precedant))
                 }
             }
         }

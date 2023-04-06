@@ -20,7 +20,7 @@ function elementInArray(element, array) {
     }
     return false
 }
-export function  clouage(board, color){
+export function  clouage(board, color, coup_precedant){
     let coupAdverse= []
     let coup =[]
     let coup_clouage = []
@@ -49,7 +49,7 @@ export function  clouage(board, color){
                 roi = [row,col]
             }
             else if (piecePareil(board[row][col])){
-                coup.push(...move(board,row,col,[[0,0],[row,col]], color))
+                coup.push(...move(board,row,col, coup_precedant))
             }
         }   
     }
@@ -62,7 +62,7 @@ export function  clouage(board, color){
         for(let r = 0; r < 8; r++){
             for (let c = 0; c < 8; c++){
                 if(pieceAdverse(board[r][c])){
-                    coupAdverse.push(...move(board,r,c,[[0,0],[r,c]], colorAdverse))
+                    coupAdverse.push(...move(board,r,c,[[coup[i - 1][0], coup[i - 1][1]],[coup[i][0], coup[i][1]]]))
                 }
             }
         }

@@ -8,7 +8,7 @@ export function legalMove(board, coup_precedant, color){
 
     */    
     let coup_legal = []   
-    coup_legal.push(...clouage(board, color))
+    coup_legal.push(...clouage(board, color, coup_precedant))
     coup_legal.push(...anti_suicide(board,coup_precedant, color))
     return coup_legal
 }

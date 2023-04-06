@@ -1,9 +1,20 @@
+function arrayEqual(a, b) {
+    if (a.length !== b.length) {
+        return false;
+    }
+    for (let i = 0; i < a.length; i++) {
+        if (!b.every((elem, index) => elem === a[index])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 export function move(board, row, col, prevMove){
     let position_initial = [row,col]
     let coup = []
     let piece = board[row][col]
-
-
     let c0 = col !== 7 
     let c7 = col !== 0
     let l0 = row !== 7
@@ -21,11 +32,13 @@ export function move(board, row, col, prevMove){
         if (l7 && c7 && board[row-1][col-1] < 0) {
             coup.push(...[position_initial,[row-1,col-1]])
         }  
-        if (row === 3 && col >= 1 && prevMove === [[1,col-1],[3,col-1]] && board[3][col-1] === -1){
-            coup.push(...[position_initial,[-100,col-1]])
+        if (row === 3 && col >= 1 && arrayEqual(prevMove[0],[1,col-1]) && arrayEqual(prevMove[1], [3, col-1])
+        && board[3][col-1] === -1){
+            coup.push(...[position_initial,[2,col-1]])
         } 
-        if (row === 3 && col <= 6 && prevMove === [[1,col+1],[3,col+1]] && board[3][col+1] === -1){
-            coup.push(...[position_initial,[100,col+1]])
+        if (row === 3 && col <= 6 && arrayEqual(prevMove[0],[1,col+1]) && arrayEqual(prevMove[1], [3, col+1]) 
+        && board[3][col+1] === -1){
+            coup.push(...[position_initial,[2,col+1]])
         } 
     }
     let moveForBlackPawn = () => {
@@ -41,11 +54,13 @@ export function move(board, row, col, prevMove){
         if (l7 && c7 && board[row+1][col-1] > 0) {
             coup.push(...[position_initial,[row+1,col-1]])
         }  
-        if (row === 5 && col >= 1 && prevMove === [[6,col-1],[4,col-1]] && board[4][col-1] === -1){
-            coup.push(...[position_initial,[-100,col-1]])
+        if (row === 4 && col >= 1 && arrayEqual(prevMove[0],[6,col-1]) && arrayEqual(prevMove[1], [4, col-1])
+            && board[4][col-1] === 1){
+            coup.push(...[position_initial,[5,col-1]])
         } 
-        if (row === 5 && col <= 6 && prevMove === [[6,col+1],[4,col+1]] && board[4][col+1] === -1){
-            coup.push(...[position_initial,[100,col+1]])
+        if (row === 4 && col <= 6 && arrayEqual(prevMove[0],[6,col+1]) && arrayEqual(prevMove[1], [4, col+1])
+            && board[4][col+1] === 1){
+            coup.push(...[position_initial,[5,col+1]])
         } 
     }
     let moveForBishop = (color) => {

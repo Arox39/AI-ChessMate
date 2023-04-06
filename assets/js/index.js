@@ -75,8 +75,19 @@ function endgame(winner) {
 function playMove(move) {
     let [from, to] = move
     let piece = board[from[0]][from[1]]
+    if(piece === 1){
+      if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
+        board[to[0] + 1][to[1]] = 0
+      }
+    }
+    else if(piece === -1){
+      if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
+        board[to[0] - 1][to[1]] = 0
+      }
+    }
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
+
 }
 
 
@@ -189,7 +200,6 @@ async function cellListener() {
       possibleMoves.forEach(pElement => {
         pElement.classList.remove('possibleMove')
       })
-
       // Enregistrer le coup précédent et vérifier s'il y a un échec
       coup_precedant = [departPiece, destinationPiece]
       if (check(board, coup_precedant, currentPlayer)) {
