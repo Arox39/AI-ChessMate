@@ -42,16 +42,16 @@ export function move(board, row, col, prevMove){
         } 
     }
     let moveForBlackPawn = () => {
-        if (l7 && board[row+1][col] === 0  ){
+        if (l0 && board[row+1][col] === 0  ){
             coup.push(...[position_initial,[row+1,col]])
         }     
         if (row === 1 && board[3][col] === 0 && board[2][col] === 0){
             coup.push(...[position_initial,[3,col]])
         }
-        if (l7 && c0 && board[row+1][col+1] > 0 ){
+        if (l0 && c0 && board[row+1][col+1] > 0 ){
             coup.push(...[position_initial,[row+1,col+1]])
         }     
-        if (l7 && c7 && board[row+1][col-1] > 0) {
+        if (l0 && c7 && board[row+1][col-1] > 0) {
             coup.push(...[position_initial,[row+1,col-1]])
         }  
         if (row === 4 && col >= 1 && arrayEqual(prevMove[0],[6,col-1]) && arrayEqual(prevMove[1], [4, col-1])

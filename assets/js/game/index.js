@@ -7,6 +7,8 @@ import { check } from './check.js'
 import { legalMove } from './legalMove.js'
 import { promotion } from './promotion.js'
 import { petit_rook, grand_rook } from './rook.js'
+import { clouage } from './clouage.js'
+import { findBestMove } from '../IA/minimax.js'
 // initialisation du plateau de jeu et du joueur courant
 let board = init()
 let currentPlayer = 'white'
@@ -70,7 +72,6 @@ function endgame(winner) {
   endgameTitle.textContent = title
   return;
 }
-
 // fonction pour jouer un coup sur le plateau de jeu
 function playMove(move) {
     let [from, to] = move
@@ -87,14 +88,18 @@ function playMove(move) {
     }
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
-
 }
-
 
 
 // fonction principale du jeu
 function game(){
   refreshBoard(board)
+  if(currentPlayer === 'black'){
+    let best_move = findBestMove(board, 2, coup_precedant)
+    playMove(best_move)
+    refreshBoard(board)
+    switchPlayer()
+  }
   // récupération des cases appartenant au joueur courant
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
@@ -224,8 +229,7 @@ async function cellListener() {
           endgame('draw')
         }
       }
-      // Rafraîchir l'affichage du plateau
-      refreshBoard(board)
+      
     }
 
     // Passer la main au joueur suivant

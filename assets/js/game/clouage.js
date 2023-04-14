@@ -22,7 +22,7 @@ function elementInArray(element, array) {
 }
 export function  clouage(board, color, coup_precedant){
     let coupAdverse= []
-    let coup =[]
+    let coup = []
     let coup_clouage = []
 
     let pieceAdverse;

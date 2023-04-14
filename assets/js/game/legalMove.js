@@ -7,7 +7,7 @@ export function legalMove(board, coup_precedant, color){
     fonction qui devra retourne tout les coup legaux
 
     */    
-    let coup_legal = []   
+    let coup_legal = []
     coup_legal.push(...clouage(board, color, coup_precedant))
     coup_legal.push(...anti_suicide(board,coup_precedant, color))
     return coup_legal

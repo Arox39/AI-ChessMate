@@ -12,26 +12,26 @@ export function init(){
     1: 'pawn'
     }
     for (let i = 0; i < 8; i++) {
-    let row = [];
-    for (let j = 0; j < 8; j++) {
-    let piece;
-    if(i === 1){
-    piece = -1
-    }
-    else if(i === 6){
-    piece = 1
-    }
-    else if(i === 0){
-    piece = bPieces[j]
-    }
-    else if(i === 7){
-    piece = wPieces[j]
-    }
-    else{
-    piece = 0
-    }
-    row.push(piece);
-    }
+      let row = [];
+      for (let j = 0; j < 8; j++) {
+      let piece;
+      if(i === 1){
+        piece = -1
+      }
+      else if(i === 6){
+        piece = 1
+      }
+      else if(i === 0){
+        piece = bPieces[j]
+      }
+      else if(i === 7){
+        piece = wPieces[j]
+      }
+      else{
+        piece = 0
+      }
+      row.push(piece);
+      }
     chessboard.push(row);
     }
 
