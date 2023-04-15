@@ -221,6 +221,88 @@ table#chessboard {
   background-repeat: no-repeat;
   background-image: url('https://www.chess.com/chess-themes/pieces/neo/150/bk.png');
 }
+.classiques {
+  background-color: rgb(255, 216, 157);
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  cursor: pointer;
+  height: 6vw;
+  width: 6vw;
+  top: 0;
+  left: 0;
+}
+
+.chess960 {
+  background-color: rgb(138, 167, 253);
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  cursor: pointer;
+  position: absolute;
+  height: 6vw;
+  width: 6vw;
+  top: 18vw;
+  left: 0;
+
+}
+
+.trois-echecs {
+  background-color: rgb(250, 129, 150);
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  cursor: pointer;
+  position: absolute;
+  height: 6vw;
+  width: 6vw;
+  top: 6vw;
+  left: 0;
+
+}
+
+.echecs-circassiens {
+  background-color: rgb(187, 112, 219);
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  cursor: pointer;
+  position: absolute;
+  height: 6vw;
+  width: 6vw;
+  top: 12vw;
+  left: 0;
+
+}
+
+.roi-de-la-colline {
+  background-color: rgb(152, 251, 152);
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000;
+  cursor: pointer;
+  position: absolute;
+  height: 6vw;
+  width: 6vw;
+  top: 24vw;
+  left: 0;
+
+}
 
 
 
