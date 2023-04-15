@@ -1,7 +1,7 @@
 
 // import des fonctions depuis d'autres fichiers
 import { init, refreshBoard } from './init.js'
-import { win_nul } from './win_nul.js'
+import { win_nul } from './win rdlc.js'
 import { move } from './move.js'
 import { check } from './check.js'
 import { legalMove } from './legalMove.js'
