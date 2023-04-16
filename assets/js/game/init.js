@@ -59,29 +59,29 @@ export function init(){
 }
 export function refreshBoard(chessboard) {
     let correspondance = {
-      4: 'rook',
-      3: 'knight',
-      2: 'bishop',
-      8: 'queen',
-      255: 'king',
-      0: 'empty',
-      1: 'pawn'
-    }
-  
+      4: "rook",
+      3: "knight",
+      2: "bishop",
+      8: "queen",
+      255: "king",
+      0: "empty",
+      1: "pawn",
+    };
+
     let table = document.querySelector("#chessboard");
     let rows = table.getElementsByTagName("tr");
-  
+
     for (let i = 0; i < rows.length; i++) {
       let cells = rows[i].getElementsByTagName("td");
-  
+
       for (let j = 0; j < cells.length; j++) {
         let piece = chessboard[i][j];
         let cell = cells[j];
         cell.dataset.piece = correspondance[Math.abs(piece)];
-        cell.dataset.color = piece > 0 ? 'white' : 'black';
-        if(chessboard[i][j] === 0){
-            cell.dataset.color = 'none'
+        cell.dataset.color = piece > 0 ? "white" : "black";
+        if (chessboard[i][j] === 0) {
+          cell.dataset.color = "none";
         }
       }
     }
-  }
+}

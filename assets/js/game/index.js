@@ -1,6 +1,6 @@
 
 // import des fonctions depuis d'autres fichiers
-import { init, refreshBoard } from './init.js'
+import { init,  } from './init.js'
 import { win_nul } from './win_nul.js'
 import { move } from './move.js'
 import { check } from './check.js'
@@ -8,7 +8,7 @@ import { legalMove } from './legalMove.js'
 import { promotion } from './promotion.js'
 import { petit_rook, grand_rook } from './rook.js'
 import { clouage } from './clouage.js'
-import { findBestMove } from '../IA/minimax.js'
+import { minimax } from '../IA/minimax.js'
 // initialisation du plateau de jeu et du joueur courant
 let board = init()
 let currentPlayer = 'white'
@@ -76,28 +76,74 @@ function endgame(winner) {
 function playMove(move) {
     let [from, to] = move
     let piece = board[from[0]][from[1]]
+    let pieceColor = piece > 0 ? 'white' : 'black'
+    let correspondance = {255: 'king', 8: 'queen', '4': 'rook', 3: 'knight', 2: 'bishop', 1: 'pawn'}
+    let caseDepart = document.getElementById(`${from[0]}-${from[1]}`)
+    let caseArriver = document.getElementById(`${to[0]}-${to[1]}`)
     if(piece === 1){
       if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
+        let caseSpecial = document.getElementById(`${to[0] + 1}-${to[1]}`)
+        caseSpecial.dataset.piece = 'empty'
+        caseSpecial.dataset.color = 'none'
         board[to[0] + 1][to[1]] = 0
       }
     }
     else if(piece === -1){
       if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
+        let caseSpecial = document.getElementById(`${to[0] + 1}-${to[1]}`)
+        caseSpecial.dataset.piece = 'empty'
+        caseSpecial.dataset.color = 'none'
         board[to[0] - 1][to[1]] = 0
       }
     }
+    // on fait le mouvement dans le plateau afficher 
+    caseDepart.dataset.piece = 'empty'
+    caseDepart.dataset.color = 'none'
+    caseArriver.dataset.piece = correspondance[Math.abs(piece)]
+    caseArriver.dataset.color = pieceColor
+    // on effectue le mouvement dans notre array
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
+    // Enregistrer le coup précédent
+    coup_precedant = [[from[0], from[1]], [to[0], to[1]]]
+
+     // Supprimer tous les coups possibles affichés
+     let possibleMoves = document.querySelectorAll('.possibleMove')
+     possibleMoves.forEach(pElement => {
+       pElement.classList.remove('possibleMove')
+     })
+     
+     if (check(board, coup_precedant, currentPlayer)) {
+       let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
+       let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
+       king.classList.add('check')
+
+       // Vérifier s'il y a échec et mat
+       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
+       if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
+         endgame(currentPlayer)
+       }
+     }
+     else{
+       let check = document.querySelector('.check')
+       if(check) check.classList.remove('check')
+       // verifier si il y a nul
+       let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
+       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
+       if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
+         
+         endgame('draw')
+       }
+     }
 }
 
 
 // fonction principale du jeu
-function game(){
-  refreshBoard(board)
+async function game(){
   if(currentPlayer === 'black'){
-    let best_move = findBestMove(board, 2, coup_precedant)
+    let best_move = minimax(board, 2, true, 0, 'b', coup_precedant)[0]
     playMove(best_move)
-    refreshBoard(board)
+    
     switchPlayer()
   }
   // récupération des cases appartenant au joueur courant
@@ -193,42 +239,14 @@ async function cellListener() {
       else if(arrayEqual(departPiece, [rowRook, 4]) && arrayEqual(destinationPiece, [rowRook, 6])){
         playMove([[rowRook, 7], [rowRook, 5]])
       }
-      refreshBoard(board)
+      
       if(arrayEqual(departPiece, [0,4])) moveBking = 1
       if(arrayEqual(departPiece, [7,4])) moveWking = 1
       if(arrayEqual(departPiece, [0,0])) moveBRook0 = 1
       if(arrayEqual(departPiece, [0,7])) moveWRook0 = 1
       if(arrayEqual(departPiece, [1,0])) moveBRook7 = 1
       if(arrayEqual(departPiece, [1,7])) moveWRook7 = 1
-      // Supprimer les coups possibles affichés
-      let possibleMoves = document.querySelectorAll('.possibleMove')
-      possibleMoves.forEach(pElement => {
-        pElement.classList.remove('possibleMove')
-      })
-      // Enregistrer le coup précédent et vérifier s'il y a un échec
-      coup_precedant = [departPiece, destinationPiece]
-      if (check(board, coup_precedant, currentPlayer)) {
-        let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
-        let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
-        king.classList.add('check')
 
-        // Vérifier s'il y a échec et mat
-        let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
-        if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
-          endgame(currentPlayer)
-        }
-      }
-      else{
-        let check = document.querySelector('.check')
-        if(check) check.classList.remove('check')
-        // verifier si il y a nul
-        let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
-        let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
-        if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
-          refreshBoard(board)
-          endgame('draw')
-        }
-      }
       
     }
 
@@ -275,7 +293,7 @@ rematchBtn.forEach(element => {
   // Réinitialisation des variables de jeu
   board = [[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
-  refreshBoard(board)
+  
   currentPlayer = 'white'
   coup_precedant = [[0,0], [0,0]]
   moveBking = 0
