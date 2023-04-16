@@ -1,6 +1,6 @@
 
 // import des fonctions depuis d'autres fichiers
-import { init, refreshBoard } from './init.js'
+import { init, refreshBoard } from './Init chess960.js'
 import { win_nul } from './win_nul.js'
 import { move } from './move.js'
 import { check } from './check.js'
