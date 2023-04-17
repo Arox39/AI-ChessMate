@@ -1,6 +1,6 @@
 
 // import des fonctions depuis d'autres fichiers
-import { init,  } from './init.js'
+import { init, refreshBoard,  } from './init.js'
 import { win_nul } from './win_nul.js'
 import { move } from './move.js'
 import { check } from './check.js'
@@ -86,6 +86,7 @@ function playMove(move) {
     let caseDepart = document.getElementById(`${from[0]}-${from[1]}`)
     let caseArriver = document.getElementById(`${to[0]}-${to[1]}`)
     if(piece === 1){
+      // prise en passant
       if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
         let caseSpecial = document.getElementById(`${to[0] + 1}-${to[1]}`)
         caseSpecial.dataset.piece = 'empty'
@@ -94,6 +95,9 @@ function playMove(move) {
       }
     }
     else if(piece === -1){
+      // promotion (on prend la reine direct pour l'IA pour pas tout compliquer)
+      if(to[0] === 7) piece = -8
+      // prise en passant 
       if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
         let caseSpecial = document.getElementById(`${to[0] + 1}-${to[1]}`)
         caseSpecial.dataset.piece = 'empty'
@@ -147,18 +151,21 @@ function playMove(move) {
 
 // fonction principale du jeu
 function game(){
-  if(currentPlayer === 'black'){
-    let best_move = minimax(board, 2, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
-    playMove(best_move)
+  setTimeout(() => {
+    if(currentPlayer === 'black'){
+      let best_move = minimax(board, 3, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
+      playMove(best_move)
+      refreshBoard(board)
+      switchPlayer()
+    }
     
-    switchPlayer()
-  }
-  // récupération des cases appartenant au joueur courant
-  let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
-  cells.forEach(cell => {
-    // ajout d'un événement de clic sur chaque case
-    cell.addEventListener('click', cellListener)
-  })
+    // récupération des cases appartenant au joueur courant
+    let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
+    cells.forEach(cell => {
+      // ajout d'un événement de clic sur chaque case
+      cell.addEventListener('click', cellListener)
+    })
+  }, 10)
 }
 
 // initialisation du jeu
@@ -256,7 +263,7 @@ async function cellListener() {
 
       
     }
-
+    refreshBoard(board)
     // Passer la main au joueur suivant
     switchPlayer()
     // On récupère toutes les cellules qui contiennent une pièce appartenant au joueur courant
@@ -315,12 +322,16 @@ rematchBtn.forEach(element => {
   possibleMoves.forEach(possibleElement => {
     possibleElement.classList.remove('possibleMove')
   })
+  document.querySelectorAll('.prevMove').forEach(element => {
+    element.classList.remove('prevMove')
+  })
   let check = document.querySelector('.check')
   if(check) check.classList.remove('check')
   let endgameElement = document.querySelector('.endgame')
   endgameElement.classList.add('hide')
   board = [[-4,-3,-2,-8,-255,-2,-3,-4],[-1,-1,-1,-1,-1,-1,-1,-1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1],[4,3,2,8,255,2,3,4]]
+  refreshBoard(board)
   // Réinitialisation du jeu
   game()  
   })

@@ -1,4 +1,5 @@
 import { legalMove } from "../game/legalMove.js";
+import { win_nul } from "../game/win_nul.js";
 import { evaluateBoard } from "./eval.js";
 
 /*
@@ -43,7 +44,9 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
         // Note: in our case, the 'children' are simply modified game states
         let currMove = children[0][i][1]
         coup_precedant = currMove;
-        let newSum = evaluateBoard(currMove, game_intial, sum, color);
+        let coupAdverse = getAllMoves(game, coup_precedant, 'w')
+        let win = win_nul(game, coup_precedant, coupAdverse)
+        let newSum = evaluateBoard(currMove, game_intial, sum, color, win);
         let [childBestMove, childValue] = minimax(game, depth - 1,alpha, beta, !isMaximizingPlayer, newSum, color, coup_precedant);
         // on remet le plateau a son etat initial
         game = game_intial

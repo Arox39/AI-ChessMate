@@ -3,6 +3,8 @@
  * https://github.com/thomasahle/sunfish/blob/master/sunfish.py
  */
 
+import { win_nul } from "../game/win_nul.js";
+
 let weights = { 'p': 100, 'n': 280, 'b': 320, 'r': 479, 'q': 929, 'k': 60000, 'k_e': 60000 };
 let pst_w = {
     'p':[
@@ -95,7 +97,7 @@ let pstSelf = {'w': pst_w, 'b': pst_b};
  * Evaluates the board at this point in time, 
  * using the material weights and piece square tables.
  */
-export function evaluateBoard (move, board_initial, prevSum, color) 
+export function evaluateBoard (move, board_initial, prevSum, color, win) 
 {
     let [from, to] = move
 
@@ -106,6 +108,12 @@ export function evaluateBoard (move, board_initial, prevSum, color)
     let movePiece = correspondance[Math.abs(board_initial[from[0]][from[1]])]
     let moveColor = board_initial[from[0]][from[1]] < 0 ? 'b' : 'w'
     let moveCaptured = correspondance[Math.abs(board_initial[to[0]][to[1]])]
+
+    if(win === 1) 
+    {
+        return +Infinity
+    }
+
     // Change endgame behavior for kings
     if (prevSum < -1500)
     {
