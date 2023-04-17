@@ -74,6 +74,11 @@ function endgame(winner) {
 }
 // fonction pour jouer un coup sur le plateau de jeu
 function playMove(move) {
+  let caseDepartPrecedant = document.getElementById(`${coup_precedant[0][0]}-${coup_precedant[0][1]}`)
+  caseDepartPrecedant.classList.remove('prevMove')
+  let caseArriverPrecedant = document.getElementById(`${coup_precedant[1][0]}-${coup_precedant[1][1]}`)
+  caseArriverPrecedant.classList.remove('prevMove')
+
     let [from, to] = move
     let piece = board[from[0]][from[1]]
     let pieceColor = piece > 0 ? 'white' : 'black'
@@ -99,8 +104,10 @@ function playMove(move) {
     // on fait le mouvement dans le plateau afficher 
     caseDepart.dataset.piece = 'empty'
     caseDepart.dataset.color = 'none'
+    caseDepart.classList.add('prevMove')
     caseArriver.dataset.piece = correspondance[Math.abs(piece)]
     caseArriver.dataset.color = pieceColor
+    caseArriver.classList.add('prevMove')
     // on effectue le mouvement dans notre array
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
@@ -112,7 +119,7 @@ function playMove(move) {
      possibleMoves.forEach(pElement => {
        pElement.classList.remove('possibleMove')
      })
-     
+
      if (check(board, coup_precedant, currentPlayer)) {
        let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
        let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
@@ -139,9 +146,9 @@ function playMove(move) {
 
 
 // fonction principale du jeu
-async function game(){
+function game(){
   if(currentPlayer === 'black'){
-    let best_move = minimax(board, 2, true, 0, 'b', coup_precedant)[0]
+    let best_move = minimax(board, 2, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
     playMove(best_move)
     
     switchPlayer()

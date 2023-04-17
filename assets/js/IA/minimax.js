@@ -17,7 +17,7 @@ import { evaluateBoard } from "./eval.js";
  * Output:
  *  the best move at the root of the current subtree.
  */
-export function minimax(game, depth, isMaximizingPlayer, sum, color, coup_precedant)
+export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color, coup_precedant)
 {
 
     let children = getAllMoves(game, coup_precedant, isMaximizingPlayer ? 'b' : 'w')
@@ -44,7 +44,7 @@ export function minimax(game, depth, isMaximizingPlayer, sum, color, coup_preced
         let currMove = children[0][i][1]
         coup_precedant = currMove;
         let newSum = evaluateBoard(currMove, game_intial, sum, color);
-        let [childBestMove, childValue] = minimax(game, depth - 1, !isMaximizingPlayer, newSum, color, coup_precedant);
+        let [childBestMove, childValue] = minimax(game, depth - 1,alpha, beta, !isMaximizingPlayer, newSum, color, coup_precedant);
         // on remet le plateau a son etat initial
         game = game_intial
         if (isMaximizingPlayer)
@@ -53,6 +53,10 @@ export function minimax(game, depth, isMaximizingPlayer, sum, color, coup_preced
             {
               maxValue = childValue;
               bestMove = currMove;
+            }
+            if (childValue > alpha)
+            {
+                alpha = childValue;
             }
         }
 
@@ -63,9 +67,17 @@ export function minimax(game, depth, isMaximizingPlayer, sum, color, coup_preced
                 minValue = childValue;
                 bestMove = currMove;
             }
+            if (childValue < beta)
+            {
+                beta = childValue;
+            }
+        }
+        // Alpha-beta pruning
+        if (alpha >= beta)
+        {
+            break;
         }
     }
-
     if (isMaximizingPlayer)
     {
         return [bestMove, maxValue]
@@ -134,4 +146,3 @@ let board = [
     [  1,  1,  1,  1,  1,   1,  1,  0],
     [  4,  3,  2,  8, 255,  2,  3,  0],
 ]
-let coup_precedant = [[0,0],[0,0]]
