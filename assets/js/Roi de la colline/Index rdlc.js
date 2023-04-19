@@ -9,6 +9,7 @@ import { promotion } from './promotion.js'
 import { petit_rook, grand_rook } from './rook.js'
 import { clouage } from './clouage.js'
 import { findBestMove } from '../IA/minimax.js'
+export function variante4(){
 // initialisation du plateau de jeu et du joueur courant
 let board = init()
 let currentPlayer = 'white'
@@ -310,3 +311,5 @@ cross.addEventListener('click', () => {
   let endgameElement = document.querySelector('.endgame')
   endgameElement.classList.add('hide')
 })
+}
+variante4()
