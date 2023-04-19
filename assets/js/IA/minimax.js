@@ -1,4 +1,4 @@
-import { legalMove } from "../game/legalMove.js";
+import { legalMove } from "../game/index.js";
 import { win_nul } from "../game/win_nul.js";
 import { evaluateBoard } from "./eval.js";
 
@@ -95,8 +95,8 @@ function getAllMoves(game, coup_precedant, color)
 {
   let board_initial = JSON.parse(JSON.stringify(game))
 
-  let black_move = legalMove(game, coup_precedant, 'black')
-  let white_move = legalMove(game, coup_precedant, 'white')
+  let black_move = legalMove(game, coup_precedant, 'black', true)
+  let white_move = legalMove(game, coup_precedant, 'white', true)
   let allMoves = [[], board_initial]
 
   if(color === 'b')

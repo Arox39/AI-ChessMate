@@ -20,7 +20,7 @@ function elementInArray(element, array) {
     }
     return false
 }
-export function  clouage(board, color, coup_precedant){
+export function clouage(board, color, coup_precedant){
     let coupAdverse= []
     let coup = []
     let coup_clouage = []

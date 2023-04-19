@@ -1,13 +1,13 @@
 
 // import des fonctions depuis d'autres fichiers
+import { clouage } from './clouage.js'
+import { anti_suicide } from './anti_suicide.js'
 import { init, refreshBoard,  } from './init.js'
 import { win_nul } from './win_nul.js'
 import { move } from './move.js'
 import { check } from './check.js'
-import { legalMove } from './legalMove.js'
 import { promotion } from './promotion.js'
 import { petit_rook, grand_rook } from './rook.js'
-import { clouage } from './clouage.js'
 import { minimax } from '../IA/minimax.js'
 // initialisation du plateau de jeu et du joueur courant
 let board = init()
@@ -50,6 +50,46 @@ function switchPlayer() {
     }
 }
 
+export function legalMove(board, coup_precedant, color, rook){
+  /*
+  parametres : board : 8liste avec 8 argument dans une liste
+  fonction qui devra retourne tout les coup legaux
+
+  */    
+  let coup_legal = []
+  coup_legal.push(...clouage(board, color, coup_precedant))
+  coup_legal.push(...anti_suicide(board,coup_precedant, color))
+
+  if(rook){
+    let mKing
+    let mRook0
+    let mRook7
+    let rowRook
+    if(currentPlayer === 'white'){
+      mKing = moveWking
+      mRook0 = moveWRook0
+      mRook7 = moveWRook7
+      rowRook = 7
+    }
+    if(currentPlayer === 'black'){
+      mKing = moveBking
+      mRook0 = moveBRook0
+      mRook7 = moveBRook7
+      rowRook = 0
+    }
+    if(petit_rook(board, mKing, mRook7, currentPlayer)){
+      coup_legal.push(...[[rowRook, 4],[rowRook, 6]])
+      console.log(coup_legal);
+    }
+    if(grand_rook(board, mKing, mRook0, currentPlayer)){
+      coup_legal.push(...[[rowRook, 4],[rowRook, 2]])
+      console.log(coup_legal);
+    }
+  }
+
+return coup_legal
+}
+
 // fonction appelée à la fin du jeu pour désactiver les clics sur les cases
 function endgame(winner) {
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
@@ -88,9 +128,6 @@ function playMove(move) {
     if(piece === 1){
       // prise en passant
       if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
-        let caseSpecial = document.getElementById(`${to[0] + 1}-${to[1]}`)
-        caseSpecial.dataset.piece = 'empty'
-        caseSpecial.dataset.color = 'none'
         board[to[0] + 1][to[1]] = 0
       }
     }
@@ -99,18 +136,23 @@ function playMove(move) {
       if(to[0] === 7) piece = -8
       // prise en passant 
       if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
-        let caseSpecial = document.getElementById(`${to[0] + 1}-${to[1]}`)
-        caseSpecial.dataset.piece = 'empty'
-        caseSpecial.dataset.color = 'none'
         board[to[0] - 1][to[1]] = 0
       }
     }
-    // on fait le mouvement dans le plateau afficher 
-    caseDepart.dataset.piece = 'empty'
-    caseDepart.dataset.color = 'none'
+    // deplace la tour si il y a un rook
+    let rowRook = currentPlayer === 'white' ? 7 : 0
+    // ici a la place de faire arrayEqual([from, to], [[rowRook, 4], [rowRook, 2]]) 
+    // on fait en plusieur morceau car la fonction n'aime pas les arrays d'array
+      if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 2])){
+        playMove([[rowRook, 0], [rowRook, 3]])
+      }
+      else if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 6])){
+        playMove([[rowRook, 7], [rowRook, 5]])
+      }
+
+    // on met de la couleur a la case d'arriver et de depart pour que le coup qui vient d'etre jouer
+    // soit plus facilement identifiable
     caseDepart.classList.add('prevMove')
-    caseArriver.dataset.piece = correspondance[Math.abs(piece)]
-    caseArriver.dataset.color = pieceColor
     caseArriver.classList.add('prevMove')
     // on effectue le mouvement dans notre array
     board[to[0]][to[1]] = piece
@@ -130,7 +172,7 @@ function playMove(move) {
        king.classList.add('check')
 
        // Vérifier s'il y a échec et mat
-       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
+       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
        if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
          endgame(currentPlayer)
        }
@@ -140,7 +182,7 @@ function playMove(move) {
        if(check) check.classList.remove('check')
        // verifier si il y a nul
        let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
-       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse)
+       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
        if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
          
          endgame('draw')
@@ -152,12 +194,12 @@ function playMove(move) {
 // fonction principale du jeu
 function game(){
   setTimeout(() => {
-    if(currentPlayer === 'black'){
-      let best_move = minimax(board, 3, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
-      playMove(best_move)
-      refreshBoard(board)
-      switchPlayer()
-    }
+    // if(currentPlayer === 'black'){
+    //   let best_move = minimax(board, 3, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
+    //   playMove(best_move)
+    //   refreshBoard(board)
+    //   switchPlayer()
+    // }
     
     // récupération des cases appartenant au joueur courant
     let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
@@ -169,12 +211,12 @@ function game(){
 }
 
 // initialisation du jeu
-let moveBking = 0
-let moveWking = 0
-let moveBRook0 = 0
-let moveWRook0 = 0
-let moveBRook7 = 0
-let moveWRook7 = 0
+var moveBking = 0
+var moveWking = 0
+var moveBRook0 = 0
+var moveWRook0 = 0
+var moveBRook7 = 0
+var moveWRook7 = 0
 let departPiece
 game()
 
@@ -193,7 +235,7 @@ async function cellListener() {
     let col = departPiece[1]
 
     // Obtenir les coups légaux possibles pour le joueur courant et le coup précédent
-    let legalMoves = legalMove(board, coup_precedant, currentPlayer)
+    let legalMoves = legalMove(board, coup_precedant, currentPlayer, true)
     // Obtenir les mouvements théoriques possibles pour la pièce sélectionnée
     let theoriqueMove = move(board, row, col, coup_precedant)
 
@@ -208,35 +250,6 @@ async function cellListener() {
         }
       }
     }
-    // obtenir les coup adverse
-    let adverseLegalMoves = legalMove(board, coup_precedant, currentPlayer === 'white' ? 'black' : 'white')
-    let mKing
-    let mRook0
-    let mRook7
-    let rowRook
-    if(currentPlayer === 'white'){
-      mKing = moveWking
-      mRook0 = moveWRook0
-      mRook7 = moveWRook7
-      rowRook = 7
-    }
-    if(currentPlayer === 'black'){
-      mKing = moveBking
-      mRook0 = moveBRook0
-      mRook7 = moveBRook7
-      rowRook = 0
-    }
-    if(petit_rook(board, mKing, mRook7, currentPlayer) && this.dataset.piece === 'king' && 
-    !(elementInArray([rowRook, 6], adverseLegalMoves))){
-      possibleMove.push([rowRook, 6])
-      document.getElementById(`${rowRook}-6`).classList.add('possibleMove')
-    }
-    if(grand_rook(board, mKing, mRook0, currentPlayer) && this.dataset.piece === 'king' && 
-    !(elementInArray([rowRook, 2], adverseLegalMoves))){
-      possibleMove.push([rowRook, 2])
-      document.getElementById(`${rowRook}-2`).classList.add('possibleMove')
-      
-    }
     // Attendre que le joueur sélectionne une destination parmi les coups possibles
     let destinationPiece = await getDestination(possibleMove)
     // Vérifier si la destination sélectionnée est légale et jouer le coup si c'est le cas
@@ -246,13 +259,6 @@ async function cellListener() {
         board[departPiece[0]][departPiece[1]] = promotion(currentPlayer)
       }
       playMove([departPiece, destinationPiece])
-      let rowRook = currentPlayer === 'white' ? 7 : 0
-      if(arrayEqual(departPiece, [rowRook, 4]) && arrayEqual(destinationPiece, [rowRook, 2])){
-        playMove([[rowRook, 0], [rowRook, 3]])
-      }
-      else if(arrayEqual(departPiece, [rowRook, 4]) && arrayEqual(destinationPiece, [rowRook, 6])){
-        playMove([[rowRook, 7], [rowRook, 5]])
-      }
       
       if(arrayEqual(departPiece, [0,4])) moveBking = 1
       if(arrayEqual(departPiece, [7,4])) moveWking = 1

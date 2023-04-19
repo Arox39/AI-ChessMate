@@ -2,9 +2,6 @@
  * Piece Square Tables, adapted from Sunfish.py:
  * https://github.com/thomasahle/sunfish/blob/master/sunfish.py
  */
-
-import { win_nul } from "../game/win_nul.js";
-
 let weights = { 'p': 100, 'n': 280, 'b': 320, 'r': 479, 'q': 929, 'k': 60000, 'k_e': 60000 };
 let pst_w = {
     'p':[

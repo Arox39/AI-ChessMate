@@ -177,8 +177,19 @@ export function move(board, row, col, prevMove){
         let pieceAdverse
         if (color === 'white') {
             pieceAdverse = (piece) => piece <= 0;
+            // ici on va juste mettre que se sont des coups qui pourrait etre possible, on 
+            // verifira si ils sont legaux plus tard
+            // grand rook
+            if(board[7][2] === 0) coup.push(...[[7,4],[7,2]])
+            // petit rook
+            if(board[7][6] === 0) coup.push(...[[7,4],[7,6]])
         } else {
             pieceAdverse = (piece) => piece >= 0;
+            // pareil qu'avant mais pour les noirs
+            // grand rook
+            if(board[0][2] === 0) coup.push(...[[0,4],[0,2]])
+            // petit rook
+            if(board[0][6] === 0) coup.push(...[[0,4],[0,6]])
         }
         if (l7 && pieceAdverse(board[row-1][col])){
             coup.push(...[position_initial,[row-1,col]])
@@ -210,7 +221,7 @@ export function move(board, row, col, prevMove){
 
         if (c7 && pieceAdverse(board[row][col-1])){
             coup.push(...[position_initial,[row,col-1]])
-        }      
+        }
     }
 
     let moveForRook = () => {
