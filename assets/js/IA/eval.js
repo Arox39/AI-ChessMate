@@ -101,7 +101,6 @@ export function evaluateBoard (move, board_initial, prevSum, color, win)
     let correspondance = {
         255 : 'k', 8: 'q', 4: 'r', 2: 'b', 3: 'n', 1: 'p'
     }
-
     let movePiece = correspondance[Math.abs(board_initial[from[0]][from[1]])]
     let moveColor = board_initial[from[0]][from[1]] < 0 ? 'b' : 'w'
     let moveCaptured = correspondance[Math.abs(board_initial[to[0]][to[1]])]

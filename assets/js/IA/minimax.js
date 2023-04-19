@@ -2,6 +2,22 @@ import { legalMove } from "../game/index.js";
 import { win_nul } from "../game/win_nul.js";
 import { evaluateBoard } from "./eval.js";
 
+function arrayEqual(a, b) {
+  if (a.length !== b.length) {
+      return false;
+  }
+  for (let i = 0; i < a.length; i++) {
+      if (!b.every((elem, index) => elem === a[index])) {
+          return false;
+      }
+  }
+  return true;
+}
+
+
+
+
+
 /*
  * Performs the minimax algorithm to choose the best move: https://en.wikipedia.org/wiki/Minimax (pseudocode provided)
  * Recursively explores all possible moves up to a given depth, and evaluates the game board at the leaves.
@@ -40,16 +56,32 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
     {
       // c'est comme si on jouait un coup
         game = children[0][i][0];
-        let game_intial = JSON.parse(JSON.stringify(children[1]))
+        let game_initial = JSON.parse(JSON.stringify(children[1]))
         // Note: in our case, the 'children' are simply modified game states
         let currMove = children[0][i][1]
+        if(game_initial[currMove[0][0]][currMove[0][1]] === 0) continue
+        let [from, to] = currMove
+        // deplace la tour si il y a un rook
+        let rowRook =game_initial[from[0]][from[1]] > 0 ? 7 : 0
+        // ici a la place de faire arrayEqual([from, to], [[rowRook, 4], [rowRook, 2]]) 
+        // on fait en plusieur morceau car la fonction n'aime pas les arrays d'array
+        if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 2]) && Math.abs(game_initial[from[0]][from[1]]) === 255){
+          board[rowRook][2] = game_initial[from[0]][from[1]]
+          board[rowRook][4] = 0
+        }
+        else if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 6]) && Math.abs(game_initial[from[0]][from[1]]) === 255){
+          board[rowRook][6] = game_initial[from[0]][from[1]]
+          board[rowRook][4] = 0
+        }
+
+
         coup_precedant = currMove;
         let coupAdverse = getAllMoves(game, coup_precedant, 'w')
         let win = win_nul(game, coup_precedant, coupAdverse)
-        let newSum = evaluateBoard(currMove, game_intial, sum, color, win);
+        let newSum = evaluateBoard(currMove, game_initial, sum, color, win);
         let [childBestMove, childValue] = minimax(game, depth - 1,alpha, beta, !isMaximizingPlayer, newSum, color, coup_precedant);
         // on remet le plateau a son etat initial
-        game = game_intial
+        game = game_initial
         if (isMaximizingPlayer)
         {
             if (childValue > maxValue)

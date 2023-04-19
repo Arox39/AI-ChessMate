@@ -43,7 +43,7 @@ export function grand_rook(board, nb_m_roi, nb_m_tour0, color){
     if(nb_m_roi !== 0 || nb_m_tour0 !== 0){
         rook = false
     }
-    
+    if(elementInArray([row,4], coupAdverse)) rook = false
     // Vérifier si les cases entre le roi et la tour sont vides
     for(let i = 1; i < 4; i++){
         if (board[row][i] !== 0 || elementInArray([row,i], coupAdverse)){
@@ -68,6 +68,7 @@ export function petit_rook(board, nb_m_roi, nb_m_tour7, color){
    
    if (nb_m_tour7 !== 0) rook = false
    
+   if(elementInArray([row,4], coupAdverse)) rook = false
    for (let i = 5; i < 7; i++){
         if (board[row][i] !== 0 || elementInArray([row,i], coupAdverse)){
             rook = false

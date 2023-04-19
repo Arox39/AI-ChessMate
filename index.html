@@ -20,50 +20,8 @@
         <div class="x-mark"><i class="fa-solid fa-xmark"></i></div>
     </div>
     <button class="rematch"><i class="fa-sharp fa-solid fa-rotate-right"></i></button>
-    <!--<script src="./assets/js/3 échecs/Index 3 échecs.js" type="module"></script> -->
-    <!-- <script src="./assets/js/IA/minimax.js" type="module"></script> -->
-    <button class="classiques" data-variante="0" onclick="verifier(this)">ÉCHECS CLASSIQUES</button>
-    <button class="trois-echecs" data-variante="1" onclick="verifier(this)">TROIS ÉCHECS</button>
-    <button class="echecs-circassiens" data-variante="2" onclick="verifier(this)">ÉCHECS CIRCASSIENS</button>
-    <button class="chess960" data-variante="3" onclick="verifier(this)">CHESS960</button> 
-    <button class="roi-de-la-colline" data-variante="4" onclick="verifier(this)">ROI DE LA COLLINE</button>
+    
     <script src="./assets/js/game/index.js" type="module"></script>
-    <script src="./assets/js/3 échecs/Index 3 échecs.js" type="module"></script>
-    <script src="./assets/js/Echecs circassiens/Index circassiens.js" type="module"></script>
-    <script src="./assets/js/Chess960/index960.js" type="module"></script>
-    <script src="./assets/js/Roi de la colline/Index rdlc.js" type="module"></script>
-    <script>
-        function verifier(bouton) {// Pas fini
-            var variante = bouton.getAttribute("data-variante");
-            switch (variante) {
-                case "0":
-                    if (confirm("Voulez-vous lancer une nouvelle partie d'échecs classique ?")) {
-                        variante0();// C'est censé lancer index.js ou du moins faire ce qu'il y a dedans 
-                    }
-                    break;
-                case "1":
-                    if (confirm("Voulez-vous lancer une nouvelle partie avec la variante trois échecs ?\nRappel : avec cette variante vous pouvez aussi gagner en mettant trois fois échec a l'adversaire")) {
-                        variante1();// Pareil pour index 3 echecs.js
-                    }
-                    break;
-                case "2":
-                    if (confirm("Voulez-vous lancer une nouvelle partie d'échecs circassiens ?\nRappel : dans cette version vos pions tombent aussi en capturant un pion adverse")) {
-                        variante2();// Etc...
-                    }
-                    break;
-                case "3":
-                    if (confirm("Voulez-vous lancer une nouvelle partie de Chess960 ?\nRappel : dans cette version les pièces autre que les pions sont disposées aleatoirements sur leur lignes respectives")) {
-                        variante3();
-                    }
-                    break;
-                case "4":
-                    if (confirm("Voulez-vous lancer une nouvelle partie d'échecs avec la variante roi de la colline ?\nRappel : avec cette variante vous pouvez aussi gagner en amenant votre roi sur les 4 cases du centre du plateau")) {
-                        variante4();
-                    }
-                    break;
-            }
-        }
-    </script>
     </body>
 </html>
 

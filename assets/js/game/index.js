@@ -79,11 +79,9 @@ export function legalMove(board, coup_precedant, color, rook){
     }
     if(petit_rook(board, mKing, mRook7, currentPlayer)){
       coup_legal.push(...[[rowRook, 4],[rowRook, 6]])
-      console.log(coup_legal);
     }
     if(grand_rook(board, mKing, mRook0, currentPlayer)){
       coup_legal.push(...[[rowRook, 4],[rowRook, 2]])
-      console.log(coup_legal);
     }
   }
 
@@ -121,8 +119,7 @@ function playMove(move) {
 
     let [from, to] = move
     let piece = board[from[0]][from[1]]
-    let pieceColor = piece > 0 ? 'white' : 'black'
-    let correspondance = {255: 'king', 8: 'queen', '4': 'rook', 3: 'knight', 2: 'bishop', 1: 'pawn'}
+
     let caseDepart = document.getElementById(`${from[0]}-${from[1]}`)
     let caseArriver = document.getElementById(`${to[0]}-${to[1]}`)
     if(piece === 1){
@@ -141,14 +138,17 @@ function playMove(move) {
     }
     // deplace la tour si il y a un rook
     let rowRook = currentPlayer === 'white' ? 7 : 0
+    let rook = currentPlayer === 'white' ? 4 : -4
     // ici a la place de faire arrayEqual([from, to], [[rowRook, 4], [rowRook, 2]]) 
     // on fait en plusieur morceau car la fonction n'aime pas les arrays d'array
-      if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 2])){
-        playMove([[rowRook, 0], [rowRook, 3]])
-      }
-      else if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 6])){
-        playMove([[rowRook, 7], [rowRook, 5]])
-      }
+    if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 2])){
+      board[rowRook][3] = rook
+      board[rowRook][0] = 0
+    }
+    else if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 6])){
+      board[rowRook][5] = rook
+      board[rowRook][7] = 0
+    }
 
     // on met de la couleur a la case d'arriver et de depart pour que le coup qui vient d'etre jouer
     // soit plus facilement identifiable
@@ -194,12 +194,15 @@ function playMove(move) {
 // fonction principale du jeu
 function game(){
   setTimeout(() => {
-    // if(currentPlayer === 'black'){
-    //   let best_move = minimax(board, 3, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
-    //   playMove(best_move)
-    //   refreshBoard(board)
-    //   switchPlayer()
-    // }
+    if(currentPlayer === 'black'){
+      let best_move = minimax(board, 2, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
+      playMove(best_move)
+      refreshBoard(board)
+      switchPlayer()
+      let win = win_nul(board, coup_precedant, legalMove(board, coup_precedant, 'white'))
+      if(win === 1) endgame('black')
+      else if(win === -1) endgame('draw')
+    }
     
     // récupération des cases appartenant au joueur courant
     let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
@@ -238,7 +241,9 @@ async function cellListener() {
     let legalMoves = legalMove(board, coup_precedant, currentPlayer, true)
     // Obtenir les mouvements théoriques possibles pour la pièce sélectionnée
     let theoriqueMove = move(board, row, col, coup_precedant)
-
+    if(currentPlayer === 'white') theoriqueMove.push(...[[7,4],[7,2],[7,4],[7,6]])
+    if(currentPlayer === 'black') theoriqueMove.push(...[[0,4],[0,2],[0,4],[0,6]])
+   
     let possibleMove = []
     
     // Vérifier si les mouvements théoriques sont légaux et les afficher
