@@ -1,5 +1,5 @@
-import { legalMove } from "../game/index.js";
-import { win_nul } from "../game/win_nul.js";
+import { legalMove } from "../classique/game.js";
+import { win_nul } from "../classique/win_nul.js";
 import { evaluateBoard } from "./eval.js";
 
 function arrayEqual(a, b) {

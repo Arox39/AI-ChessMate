@@ -1,14 +1,18 @@
 
 // import des fonctions depuis d'autres fichiers
-import { clouage } from './clouage.js'
-import { anti_suicide } from './anti_suicide.js'
-import { init, refreshBoard,  } from './init.js'
-import { win_nul } from './win_nul.js'
-import { move } from './move.js'
-import { check } from './check.js'
-import { promotion } from './promotion.js'
-import { petit_rook, grand_rook } from './rook.js'
+import { clouage } from '../classique/clouage.js'
+import { anti_suicide } from '../classique/anti_suicide.js'
+import { init, refreshBoard,  } from '../classique/init.js'
+import { win_nul } from '../classique/win_nul.js'
+import { move } from '../classique/move.js'
+import { check } from '../classique/check.js'
+import { promotion } from '../classique/promotion.js'
+import { petit_rook, grand_rook } from '../classique/rook.js'
 import { minimax } from '../IA/minimax.js'
+
+
+
+
 // initialisation du plateau de jeu et du joueur courant
 let board = init()
 let currentPlayer = 'white'
@@ -40,13 +44,10 @@ function elementInArray(element, array) {
 
 // fonction pour passer au joueur suivant
 function switchPlayer() {
-  let indication = document.querySelector('.current-player')
     if (currentPlayer === 'white') {
         currentPlayer = 'black'
-        indication.dataset.color = 'black'
     } else {
         currentPlayer = 'white'
-        indication.dataset.color = 'white'
     }
 }
 
@@ -155,7 +156,7 @@ function playMove(move) {
     caseDepart.classList.add('prevMove')
     caseArriver.classList.add('prevMove')
     // on effectue le mouvement dans notre array
-    board[to[0]][to[1]] = piece
+    board[to[0]][to[1]] = 0
     board[from[0]][from[1]] = 0
     // Enregistrer le coup précédent
     coup_precedant = [[from[0], from[1]], [to[0], to[1]]]
@@ -192,7 +193,7 @@ function playMove(move) {
 
 
 // fonction principale du jeu
-function game(){
+export function game(){
   setTimeout(() => {
     if(currentPlayer === 'black'){
       let best_move = minimax(board, 2, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
@@ -214,12 +215,12 @@ function game(){
 }
 
 // initialisation du jeu
-var moveBking = 0
-var moveWking = 0
-var moveBRook0 = 0
-var moveWRook0 = 0
-var moveBRook7 = 0
-var moveWRook7 = 0
+let moveBking = 0
+let moveWking = 0
+let moveBRook0 = 0
+let moveWRook0 = 0
+let moveBRook7 = 0
+let moveWRook7 = 0
 let departPiece
 game()
 
@@ -338,8 +339,8 @@ rematchBtn.forEach(element => {
   })
   let check = document.querySelector('.check')
   if(check) check.classList.remove('check')
-  let endgameElement = document.querySelector('.endgame')
-  endgameElement.classList.add('hide')
+  // let endgameElement = document.querySelector('.endgame')
+  // endgameElement.classList.add('hide')
   board = [[-4,-3,-2,-8,-255,-2,-3,-4],[-1,-1,-1,-1,-1,-1,-1,-1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0],[1,1,1,1,1,1,1,1],[4,3,2,8,255,2,3,4]]
   refreshBoard(board)
@@ -348,8 +349,8 @@ rematchBtn.forEach(element => {
   })
 })
 
-let cross = document.querySelector('.x-mark')
-cross.addEventListener('click', () => {
-  let endgameElement = document.querySelector('.endgame')
-  endgameElement.classList.add('hide')
-})
+// let cross = document.querySelector('.x-mark')
+// cross.addEventListener('click', () => {
+//   let endgameElement = document.querySelector('.endgame')
+//   endgameElement.classList.add('hide')
+// })

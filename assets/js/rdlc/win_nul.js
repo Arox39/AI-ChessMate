@@ -1,4 +1,4 @@
-import {check} from './check.js'
+import {check} from '../classique/check.js'
 
 function arrayEqual(a, b) {
     if (a.length !== b.length) {

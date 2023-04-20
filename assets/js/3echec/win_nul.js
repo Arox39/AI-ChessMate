@@ -1,4 +1,4 @@
-import {check} from './check.js'
+import {check} from '../classique/check.js'
 
 export function win_nul(board,coup_precedant,coup, echecs){
     /*

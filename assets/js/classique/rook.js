@@ -1,4 +1,4 @@
-import { legalMove } from "./index.js"
+import { legalMove } from "./game.js"
 
 
 
