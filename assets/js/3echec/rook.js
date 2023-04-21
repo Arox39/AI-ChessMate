@@ -1,4 +1,4 @@
-import { legalMove } from "../chess960/game.js"
+import { legalMove } from "./game.js"
 
 
 
