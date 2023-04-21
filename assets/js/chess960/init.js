@@ -5,6 +5,7 @@ function random(wPieces, bPieces){
     wPieces.sort(() => Math.random() - 0.5);
     bPieces.sort(() => Math.random() - 0.5);
 }
+random(wPieces, bPieces)
 
 export function init(){
     let chessboard = [];

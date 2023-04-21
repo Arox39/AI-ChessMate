@@ -156,8 +156,15 @@ function playMove(move) {
     caseDepart.classList.add('prevMove')
     caseArriver.classList.add('prevMove')
     // on effectue le mouvement dans notre array
-    board[to[0]][to[1]] = 0
+    // Si il y a capture les deux pions meurent
+    if(board[to[0]][to[1]] !== 0){
+      board[to[0]][to[1]] = 0
+      board[from[0]][from[1]] = 0
+    }
+    else{
+    board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
+    }
     // Enregistrer le coup précédent
     coup_precedant = [[from[0], from[1]], [to[0], to[1]]]
 
