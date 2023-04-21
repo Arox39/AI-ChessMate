@@ -8,7 +8,7 @@ import { move } from './move.js'
 import { check } from './check.js'
 import { promotion } from './promotion.js'
 import { petit_rook, grand_rook } from './rook.js'
-import { minimax } from '../IA/minimax.js'
+import { minimax } from './IA/minimax.js'
 
 console.log('salut');
 

@@ -1,5 +1,5 @@
 
-// import des fonctions depuis d'autres fichiers
+// // import des fonctions depuis d'autres fichiers
 import { clouage } from '../classique/clouage.js'
 import { anti_suicide } from '../classique/anti_suicide.js'
 import { init, refreshBoard,  } from '../classique/init.js'
@@ -7,11 +7,11 @@ import { win_nul } from '../classique/win_nul.js'
 import { move } from '../classique/move.js'
 import { check } from '../classique/check.js'
 import { promotion } from '../classique/promotion.js'
-import { petit_rook, grand_rook } from '../classique/rook.js'
-import { minimax } from '../IA/minimax.js'
+import { petit_rook, grand_rook } from './rook.js'
+import { minimax } from './IA/minimax.js'
 
-
-
+// let chessboard= document.getElementById('chessboard')
+// if(chessboard) chessboard.remove()
 
 // initialisation du plateau de jeu et du joueur courant
 let board = init()

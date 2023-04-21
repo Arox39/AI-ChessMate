@@ -7,9 +7,8 @@ import { win_nul } from './win_nul.js'
 import { move } from '../classique/move.js'
 import { check } from '../classique/check.js'
 import { promotion } from '../classique/promotion.js'
-import { petit_rook, grand_rook } from '../classique/rook.js'
-import { minimax } from '../IA/minimax.js'
-
+import { petit_rook, grand_rook } from './rook.js'
+import { minimax } from './IA/minimax.js'
 
 
 

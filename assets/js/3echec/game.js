@@ -7,8 +7,8 @@ import { win_nul } from './win_nul.js'
 import { move } from '../classique/move.js'
 import { check } from '../classique/check.js'
 import { promotion } from '../classique/promotion.js'
-import { petit_rook, grand_rook } from '../classique/rook.js'
-import { minimax } from '../IA/minimax.js'
+import { petit_rook, grand_rook } from './rook.js'
+import { minimax } from './IA/minimax.js'
 
 
 
@@ -90,7 +90,8 @@ return coup_legal
 }
 
 // fonction appelée à la fin du jeu pour désactiver les clics sur les cases
-function endgame(winner) {
+function endgame(winner){
+  console.log('d');
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
     cell.removeEventListener('click', cellListener)
