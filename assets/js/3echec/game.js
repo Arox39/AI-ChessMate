@@ -90,26 +90,28 @@ return coup_legal
 }
 
 // fonction appelée à la fin du jeu pour désactiver les clics sur les cases
-function endgame(winner){
-  console.log('d');
+function endgame(winner, cause) {
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
     cell.removeEventListener('click', cellListener)
   })
   let endgameElement = document.querySelector('.endgame')
-  endgameElement.classList.toggle('hide')
-  let endgameTitle = document.getElementById('endgame-title')
+  console.log(endgameElement);
+  endgameElement.classList.remove('cacher')
+  let state = document.getElementById('etat')
+  let causeTxt = document.getElementById('cause')
   let title;
   if(winner === 'draw'){
-    title = 'Égalité !'
+    title = 'Égalité!'
   }
   else if(winner === 'white'){
-    title = 'Les blancs ont gagnés !'
+    title = 'Vous avez gagné!'
   }
   else{
-    title = 'Les noirs ont gagnés !'
+    title = 'Vous avez perdu!'
   }
-  endgameTitle.textContent = title
+  state.textContent = title
+  causeTxt.textContent = `Par ${cause}`
   return;
 }
 // fonction pour jouer un coup sur le plateau de jeu
@@ -168,28 +170,21 @@ function playMove(move) {
        pElement.classList.remove('possibleMove')
      })
 
+     let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
      if (check(board, coup_precedant, currentPlayer)) {
-       let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
        let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
        king.classList.add('check')
-
-       // Vérifier s'il y a échec et mat
-       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
-       if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
-         endgame(currentPlayer)
-       }
+       currentPlayer === 'white' ? echecRoiNoir++ : echecRoiBlanc++
      }
-     else{
-       let check = document.querySelector('.check')
-       if(check) check.classList.remove('check')
-       // verifier si il y a nul
-       let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
-       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
-       if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
-         
-         endgame('draw')
-       }
-     }
+     else if(document.querySelector('.check'))document.querySelector('.check').classList.remove('check')
+      let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
+      let echecRoiAdverse = currentPlayer === 'white' ? echecRoiNoir : echecRoiBlanc
+      let win = win_nul(board, coup_precedant, legalMovesAdverse, echecRoiAdverse)
+      
+      if(echecRoiAdverse === 3) endgame(currentPlayer, '3 Échec')
+      else if(win === 1) endgame(currentPlayer, 'Échec et mat')
+      else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
+      else if(win === -1) endgame('draw', '')
 }
 
 
@@ -201,9 +196,12 @@ export function game(){
       playMove(best_move)
       refreshBoard(board)
       switchPlayer()
-      let win = win_nul(board, coup_precedant, legalMove(board, coup_precedant, 'white'))
-      if(win === 1) endgame('black')
-      else if(win === -1) endgame('draw')
+      let legalMovesAdverse = legalMove(board, coup_precedant, 'white', true)
+      let win = win_nul(board, coup_precedant, legalMovesAdverse, echecRoiBlanc)
+      if(echecRoiBlanc === 3) endgame('black', '3 Échec')
+      else if(win === 1) endgame('black', 'Échec et mat')
+      else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
+      else if(win === -1) endgame('draw', '')
     }
     
     // récupération des cases appartenant au joueur courant
@@ -222,6 +220,8 @@ let moveBRook0 = 0
 let moveWRook0 = 0
 let moveBRook7 = 0
 let moveWRook7 = 0
+let echecRoiBlanc = 0
+let echecRoiNoir = 0
 let departPiece
 game()
 
@@ -329,7 +329,8 @@ rematchBtn.forEach(element => {
   moveWRook0 = 0
   moveBRook7 = 0
   moveWRook7 = 0
-
+  echecRoiBlanc = 0
+  echecRoiNoir = 0
   // Suppression des coups possibles affichés précédemment
   let possibleMoves = document.querySelectorAll('.possibleMove')
   possibleMoves.forEach(possibleElement => {
@@ -349,9 +350,3 @@ rematchBtn.forEach(element => {
   game()  
   })
 })
-
-// let cross = document.querySelector('.x-mark')
-// cross.addEventListener('click', () => {
-//   let endgameElement = document.querySelector('.endgame')
-//   endgameElement.classList.add('hide')
-// })

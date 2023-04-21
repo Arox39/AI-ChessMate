@@ -167,8 +167,15 @@ function playMove(move, board_initial) {
         board[to[0] - 1][to[1]] = 0
       }
     }
+    // on regarde si il y a une capture et si la piece bouger n'est pas le roi, si oui la piece disparait
+    if(board[to[0]][to[1]] !== 0 && board[from[0]][from[1]] !== 255 && board[from[0]][from[1]] !== -255){
+      board[to[0]][to[1]] = 0
+      board[from[0]][from[1]] = 0
+    }
+    else{
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
+    }
     return board
 }
 let board = [

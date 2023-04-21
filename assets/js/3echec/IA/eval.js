@@ -1,3 +1,4 @@
+
 /* 
  * Piece Square Tables, adapted from Sunfish.py:
  * https://github.com/thomasahle/sunfish/blob/master/sunfish.py
@@ -94,7 +95,7 @@ let pstSelf = {'w': pst_w, 'b': pst_b};
  * Evaluates the board at this point in time, 
  * using the material weights and piece square tables.
  */
-export function evaluateBoard (move, board_initial, prevSum, color, win) 
+export function evaluateBoard (move, board_initial, prevSum, color, win, check) 
 {
     let [from, to] = move
 
@@ -109,7 +110,16 @@ export function evaluateBoard (move, board_initial, prevSum, color, win)
     {
         return +Infinity
     }
-
+    // c'est nous qui mettons echec l'autre
+    else if(check && moveColor === color)
+    {
+        prevSum += 60000
+    }
+    // c'est l'adversaire qui nous met echec
+    else if(check && moveColor !== color)
+    {
+        prevSum -= 60000
+    }
     // Change endgame behavior for kings
     if (prevSum < -1500)
     {

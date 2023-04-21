@@ -120,15 +120,19 @@ export function evaluateBoard (move, board_initial, prevSum, color, win)
     // il y avait une piece a l'endroit ou il a bougé
     if (board_initial[to[0]][to[1]] !== 0)
     {
-        // Opponent piece was captured (good for us)
+        // Notre piece a pris 
         if (moveColor === color)
         {
             prevSum += (weights[moveCaptured] + pstOpponent[moveColor][moveCaptured][to[0]][to[1]]);
+            // notre piece disparait aussi
+            prevSum -= (weights[movePiece] + pstOpponent[moveColor][movePiece][to[0]][to[1]]);
         }
-        // Our piece was captured (bad for us)
+        // Notre piece a ete prise
         else
         {
             prevSum -= (weights[moveCaptured] + pstSelf[moveColor][moveCaptured][to[0]][to[1]]);
+            // la piece de l'adversaire disparait aussi
+            prevSum += (weights[movePiece] + pstSelf[moveColor][movePiece][to[0]][to[1]]);
         }
     }
     

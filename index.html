@@ -16,13 +16,23 @@
     <link rel="stylesheet" href="./assets/css/styles.css">
 </head>
 <body> 
-    <div class="rematch hide" id="rematch" data-color="white">
+    <div class="btn-rematch rematch hide" id="rematch" data-color="white">
         <i class="fa-solid fa-rotate-right"></i>
     </div>
-    <div class="home hide" data-color="white">
+    <div class="btn-home home hide" data-color="white">
         <i class="fa-solid fa-house"></i>
     </div>
     <div class="current-player hide" data-color="white"></div>
+    <div class="endgame cacher">
+        <i class="fa-solid fa-xmark"></i>
+        <p id="etat"></p>
+        <p id="cause"></p>
+        <div class="btns">
+            <div class="btn home">Retourner a l'accueil</div>
+            <div class="btn rematch">Rejouer une partie</div>
+        </div>
+    </div>
+
     <section id="home">
         <div class="container">
             <div class="variante">

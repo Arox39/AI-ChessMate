@@ -1,12 +1,15 @@
-let wPieces = [4, 3, 2, 8, 255, 2, 3, 4];
-let bPieces = [-4, -3, -2, -8, -255, -2, -3, -4];
-
-function random(wPieces, bPieces){
-    wPieces.sort(() => Math.random() - 0.5);
-    bPieces.sort(() => Math.random() - 0.5);
-}
-
 export function init(){
+  let wPieces = [4, 3, 2, 8, 255, 2, 3, 4];
+  let bPieces = [-4, -3, -2, -8, -255, -2, -3, -4];
+  
+  function random(wPieces, bPieces){
+      wPieces.sort(() => Math.random() - 0.5);
+      for(let i = 0; i < bPieces.length; i++){
+        bPieces[i] = 0 - wPieces[i]
+      }
+  }
+  random(wPieces, bPieces)
+    
     let chessboard = [];
     let correspondance = {
     4: 'rook',
@@ -63,6 +66,8 @@ export function init(){
     document.body.appendChild(table);
     return chessboard
 }
+
+
 export function refreshBoard(chessboard) {
     let correspondance = {
       4: 'rook',

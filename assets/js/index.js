@@ -1,8 +1,10 @@
 
 let home = document.getElementById('home')
 let submit = document.getElementById('submit')
-let rematch = document.getElementById('rematch')
-let homeBtn = document.querySelector('.home')
+let rematch = document.querySelectorAll('.rematch')
+let homeBtn = document.querySelectorAll('.home')
+let endgame = document.querySelector('.endgame')
+let xmark = document.querySelector('.fa-xmark')
 // chessBoard.remove()
 submit.addEventListener('click', () => {
     const selectElement = document.querySelectorAll('select');
@@ -15,17 +17,24 @@ submit.addEventListener('click', () => {
     script.id = 'script'
     script.type = 'module';
     home.classList.toggle('hide')
-    rematch.classList.toggle('hide')
-    homeBtn.classList.toggle('hide')
+    rematch[0].classList.toggle('hide')
+    homeBtn[0].classList.toggle('hide')
     document.getElementsByTagName('body')[0].appendChild(script);
 })
-homeBtn.addEventListener('click', () => {
-    let chessBoard = document.getElementById('chessboard')
-    chessBoard.remove()
-    let script = document.getElementById('script')
-    script.remove()
-    home.classList.toggle('hide')
-    rematch.classList.toggle('hide')
-    homeBtn.classList.toggle('hide')
-    location.reload()
+homeBtn.forEach(btn => {
+    btn.addEventListener('click', () => {
+        let chessBoard = document.getElementById('chessboard')
+        chessBoard.remove()
+        let script = document.getElementById('script')
+        script.remove()
+        home.classList.toggle('hide')
+        rematch[0].classList.toggle('hide')
+        homeBtn[0].classList.toggle('hide')
+        endgame.classList.add('cacher')
+        location.reload()
+    })
+});
+
+xmark.addEventListener('click', () => {
+    endgame.classList.add('cacher')
 })

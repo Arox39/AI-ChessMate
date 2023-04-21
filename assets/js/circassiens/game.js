@@ -1,5 +1,5 @@
 
-// // import des fonctions depuis d'autres fichiers
+// import des fonctions depuis d'autres fichiers
 import { clouage } from '../classique/clouage.js'
 import { anti_suicide } from '../classique/anti_suicide.js'
 import { init, refreshBoard,  } from '../classique/init.js'
@@ -10,8 +10,7 @@ import { promotion } from '../classique/promotion.js'
 import { petit_rook, grand_rook } from './rook.js'
 import { minimax } from './IA/minimax.js'
 
-// let chessboard= document.getElementById('chessboard')
-// if(chessboard) chessboard.remove()
+
 
 // initialisation du plateau de jeu et du joueur courant
 let board = init()
@@ -90,25 +89,28 @@ return coup_legal
 }
 
 // fonction appelée à la fin du jeu pour désactiver les clics sur les cases
-function endgame(winner) {
+function endgame(winner, cause) {
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
     cell.removeEventListener('click', cellListener)
   })
   let endgameElement = document.querySelector('.endgame')
-  endgameElement.classList.toggle('hide')
-  let endgameTitle = document.getElementById('endgame-title')
+  console.log(endgameElement);
+  endgameElement.classList.remove('cacher')
+  let state = document.getElementById('etat')
+  let causeTxt = document.getElementById('cause')
   let title;
   if(winner === 'draw'){
-    title = 'Égalité !'
+    title = 'Égalité!'
   }
   else if(winner === 'white'){
-    title = 'Les blancs ont gagnés !'
+    title = 'Vous avez gagné!'
   }
   else{
-    title = 'Les noirs ont gagnés !'
+    title = 'Vous avez perdu!'
   }
-  endgameTitle.textContent = title
+  state.textContent = title
+  causeTxt.textContent = `Par ${cause}`
   return;
 }
 // fonction pour jouer un coup sur le plateau de jeu
@@ -156,8 +158,15 @@ function playMove(move) {
     caseDepart.classList.add('prevMove')
     caseArriver.classList.add('prevMove')
     // on effectue le mouvement dans notre array
-    board[to[0]][to[1]] = 0
+     // Si il y a capture les deux pions meurent
+     if(board[to[0]][to[1]] !== 0 && board[from[0]][from[1]] !== 255 && board[from[0]][from[1]] !== -255){
+      board[to[0]][to[1]] = 0
+      board[from[0]][from[1]] = 0
+    }
+    else{
+    board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
+    }
     // Enregistrer le coup précédent
     coup_precedant = [[from[0], from[1]], [to[0], to[1]]]
 
@@ -167,28 +176,17 @@ function playMove(move) {
        pElement.classList.remove('possibleMove')
      })
 
+     let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
      if (check(board, coup_precedant, currentPlayer)) {
-       let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
        let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
        king.classList.add('check')
-
-       // Vérifier s'il y a échec et mat
-       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
-       if (win_nul(board, coup_precedant, legalMovesAdverse) === 1) {
-         endgame(currentPlayer)
-       }
      }
-     else{
-       let check = document.querySelector('.check')
-       if(check) check.classList.remove('check')
-       // verifier si il y a nul
-       let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
-       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
-       if (win_nul(board, coup_precedant, legalMovesAdverse) === -1) {
-         
-         endgame('draw')
-       }
-     }
+     else if(document.querySelector('.check'))document.querySelector('.check').classList.remove('check')
+      let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
+      let win = win_nul(board, coup_precedant, legalMovesAdverse)
+      if(win === 1) endgame(currentPlayer, 'Échec et mat')
+      else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
+      else if(win === -1) endgame('draw', '')
 }
 
 
@@ -200,9 +198,11 @@ export function game(){
       playMove(best_move)
       refreshBoard(board)
       switchPlayer()
-      let win = win_nul(board, coup_precedant, legalMove(board, coup_precedant, 'white'))
-      if(win === 1) endgame('black')
-      else if(win === -1) endgame('draw')
+      let legalMovesAdverse = legalMove(board, coup_precedant, 'white', true)
+      let win = win_nul(board, coup_precedant, legalMovesAdverse)
+      if(win === 1) endgame('black', 'Échec et mat')
+      else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
+      else if(win === -1) endgame('draw', '')
     }
     
     // récupération des cases appartenant au joueur courant
@@ -348,9 +348,3 @@ rematchBtn.forEach(element => {
   game()  
   })
 })
-
-// let cross = document.querySelector('.x-mark')
-// cross.addEventListener('click', () => {
-//   let endgameElement = document.querySelector('.endgame')
-//   endgameElement.classList.add('hide')
-// })

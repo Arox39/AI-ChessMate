@@ -25,9 +25,13 @@ export function win_nul(board,coup_precedant,coup){
             win = 1;
         }
     }
-
+    let case1 = document.getElementById('3-3')
+    let case2 = document.getElementById('3-4')
+    let case3 = document.getElementById('4-3')
+    let case4 = document.getElementById('4-4')
     // Vérifie si l'un des rois se trouve sur l'une des cases centrales
-    if (board[3][3].dataset.piece === 'king' || board[3][4].dataset.piece === 'king' || board[4][3].dataset.piece === 'king' || board[4][4].dataset.piece === 'king') {
+    if (case1.dataset.piece === 'king' || case2.dataset.piece === 'king' 
+    || case3.dataset.piece === 'king' || case4.dataset.piece === 'king') {
         win = 2;
     }
 
