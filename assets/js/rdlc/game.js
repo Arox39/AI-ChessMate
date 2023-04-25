@@ -177,9 +177,9 @@ function playMove(move) {
       let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
       let win = win_nul(board, coup_precedant, legalMovesAdverse)
       if(win === 1) endgame(currentPlayer, 'Échec et mat')
-      else if(win === 2) endgame(currentPlayer, 'Montage de la colinne')
+      else if(win === 2) endgame(currentPlayer, 'Roi de la colline')
       else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
-      else if(win === -1) endgame('draw', '')
+      else if(win === -1) endgame('draw', 'Matériel insuffisant')
 }
 
 
@@ -196,9 +196,9 @@ export function game(){
       let legalMovesAdverse = legalMove(board, coup_precedant, 'white', true)
       let win = win_nul(board, coup_precedant, legalMovesAdverse)
       if(win === 1) endgame('black', 'Échec et mat')
-      else if(win === 2) endgame('black', 'Montage de la colinne')
+      else if(win === 2) endgame('black', 'Roi de la colline')
       else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
-      else if(win === -1) endgame('draw', '')
+      else if(win === -1) endgame('draw', 'Matériel insuffisant')
     }
     
     // récupération des cases appartenant au joueur courant
@@ -242,8 +242,8 @@ async function cellListener() {
     let legalMoves = legalMove(board, coup_precedant, currentPlayer, true)
     // Obtenir les mouvements théoriques possibles pour la pièce sélectionnée
     let theoriqueMove = move(board, row, col, coup_precedant)
-    if(currentPlayer === 'white') theoriqueMove.push(...[[7,4],[7,2],[7,4],[7,6]])
-    if(currentPlayer === 'black') theoriqueMove.push(...[[0,4],[0,2],[0,4],[0,6]])
+    if(currentPlayer === 'white'&& this.dataset.piece === 255) theoriqueMove.push(...[[7,4],[7,2],[7,4],[7,6]])
+    if(currentPlayer === 'black' && this.dataset.piece === -255) theoriqueMove.push(...[[0,4],[0,2],[0,4],[0,6]])
    
     let possibleMove = []
     

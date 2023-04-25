@@ -123,7 +123,7 @@ function playMove(move) {
       let win = win_nul(board, coup_precedant, legalMovesAdverse)
       if(win === 1) endgame(currentPlayer, 'Échec et mat')
       else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
-      else if(win === -1) endgame('draw', '')
+      else if(win === -1) endgame('draw', 'Matériel insuffisant')
 }
 
 
@@ -141,7 +141,7 @@ export function game(){
       let win = win_nul(board, coup_precedant, legalMovesAdverse)
       if(win === 1) endgame('black', 'Échec et mat')
       else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
-      else if(win === -1) endgame('draw', '')
+      else if(win === -1) endgame('draw', 'Matériel insuffisant')
     }
     
     // récupération des cases appartenant au joueur courant
