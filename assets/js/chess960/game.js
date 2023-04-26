@@ -190,9 +190,7 @@ async function cellListener() {
     let legalMoves = legalMove(board, coup_precedant, currentPlayer, true)
     // Obtenir les mouvements théoriques possibles pour la pièce sélectionnée
     let theoriqueMove = move(board, row, col, coup_precedant)
-    if(currentPlayer === 'white') theoriqueMove.push(...[[7,4],[7,2],[7,4],[7,6]])
-    if(currentPlayer === 'black') theoriqueMove.push(...[[0,4],[0,2],[0,4],[0,6]])
-   
+
     let possibleMove = []
     
     // Vérifier si les mouvements théoriques sont légaux et les afficher

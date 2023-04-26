@@ -127,7 +127,6 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
 function getAllMoves(game, coup_precedant, color)
 {
   let board_initial = JSON.parse(JSON.stringify(game))
-  console.log(JSON.parse(JSON.stringify(game)));
   let black_move = legalMove(game, coup_precedant, 'black', true)
   let white_move = legalMove(game, coup_precedant, 'white', true)
   let allMoves = [[], board_initial]
