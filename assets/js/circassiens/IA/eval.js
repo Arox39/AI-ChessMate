@@ -1,5 +1,6 @@
+
 /* 
- * Piece Square Tables, adapted from Sunfish.py:
+ * Piece Square Tables, adapter de Sunfish.py:
  * https://github.com/thomasahle/sunfish/blob/master/sunfish.py
  */
 let weights = { 'p': 100, 'n': 280, 'b': 320, 'r': 479, 'q': 929, 'k': 60000, 'k_e': 60000 };
@@ -65,7 +66,7 @@ let pst_w = {
             [ 17,  30,  -3, -14,   6,  -1,  40,  18]
         ],
 
-    // Endgame King Table
+    // point pour le roi en fin de game 
     'k_e': [
             [-50, -40, -30, -20, -20, -30, -40, -50],
             [-30, -20, -10,   0,   0, -10, -20, -30],
@@ -91,8 +92,8 @@ let pstOpponent = {'w': pst_b, 'b': pst_w};
 let pstSelf = {'w': pst_w, 'b': pst_b};
 
 /* 
- * Evaluates the board at this point in time, 
- * using the material weights and piece square tables.
+ * Evalue le tableau pour un certain coup 
+ * en utilisant le score lier a chaque piece et leurs position
  */
 export function evaluateBoard (move, board_initial, prevSum, color, win) 
 {
@@ -110,7 +111,7 @@ export function evaluateBoard (move, board_initial, prevSum, color, win)
         return +Infinity
     }
 
-    // Change endgame behavior for kings
+    // Change le comportement du roi quand on est en fin de game 
     if (prevSum < -1500)
     {
         if (movePiece === 'k') {movePiece = 'k_e'}
@@ -138,16 +139,16 @@ export function evaluateBoard (move, board_initial, prevSum, color, win)
     
     if (movePiece === 'p' && (to[0] === 7 || to[0] === 0))
     {
-        // NOTE: promote to queen for simplicity
+        // NOTE: on promue direct en renne pour la simpliciter
         let movePromotion = 'q';
 
-        // Our piece was promoted (good for us)
+        // Notre piece a ete promue (bon pour nous)
         if (moveColor === color)
         {
             prevSum -= (weights[movePiece] + pstSelf[moveColor][movePiece][from[0]][from[1]]);
             prevSum += (weights[movePromotion] + pstSelf[moveColor][movePromotion][to[0]][to[1]]);
         }
-        // Opponent piece was promoted (bad for us)
+        // la piece adverse a ete promue (mauvais pour nous)
         else
         {
             prevSum += (weights[movePiece] + pstSelf[moveColor][movePiece][from[0]][from[1]]);
@@ -156,7 +157,7 @@ export function evaluateBoard (move, board_initial, prevSum, color, win)
     }
     else
     {
-        // The moved piece still exists on the updated board, so we only need to update the position value
+        // la piece qui a bouger existe toujours, donc on a seulement besoin de mettre a jour le score des positions
         if (moveColor !== color)
         {
             prevSum += pstSelf[moveColor][movePiece][from[0]][from[1]];

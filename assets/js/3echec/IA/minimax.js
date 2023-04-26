@@ -1,4 +1,3 @@
-import { check } from "../../classique/check.js";
 import { legalMove } from "../game.js";
 import { win_nul } from "../win_nul.js";
 import { evaluateBoard } from "./eval.js";
@@ -20,36 +19,34 @@ function arrayEqual(a, b) {
 
 
 /*
- * Performs the minimax algorithm to choose the best move: https://en.wikipedia.org/wiki/Minimax (pseudocode provided)
- * Recursively explores all possible moves up to a given depth, and evaluates the game board at the leaves.
+ * Fonction qui explore de manière récursive tous les coups possibles jusqu'à une certaine profondeur, et évalue le plateau au niveau des feuilles en utilisant l'algorithme minimax avec élagage alpha-bêta.
  * 
- * Basic idea: maximize the minimum value of the position resulting from the opponent's possible following moves.
+ * @param {Array} game - L'état actuel du plateau.
+ * @param {Number} depth - La profondeur maximale jusqu'à laquelle l'algorithme va explorer.
+ * @param {Number} alpha - La valeur alpha pour l'élagage alpha-bêta.
+ * @param {Number} beta - La valeur beta pour l'élagage alpha-bêta.
+ * @param {Boolean} isMaximizingPlayer - True si l'IA cherche à maximiser sa valeur, False si elle cherche à minimiser la valeur de l'adversaire.
+ * @param {Number} sum - La somme actuelle de l'évaluation du plateau.
+ * @param {String} color - La couleur de l'IA ('black', 'white').
+ * @param {Array} coup_precedant - Le dernier coup joué.
  * 
- * Inputs:
- *  - game:                 the game object.
- *  - depth:                the depth of the recursive tree of all possible moves (i.e. height limit).
- *  - isMaximizingPlayer:   true if the current layer is maximizing, false otherwise.
- *  - sum:                  the sum (evaluation) so far at the current layer.
- *  - color:                the color of the current player.
- * 
- * Output:
- *  the best move at the root of the current subtree.
+ * @returns {Array} - Un tableau contenant le meilleur coup à jouer et sa valeur.
  */
 export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color, coup_precedant)
 {
 
     let children = getAllMoves(game, coup_precedant, isMaximizingPlayer ? 'b' : 'w')
-    // Sort moves randomly, so the same move isn't always picked on ties
+    // trie children au hazard pour pas que ce soit toujours le meme choisi entre 2 meme coup
     children[0].sort(function(a, b){return 0.5 - Math.random()});
     
     let currMove;
-    // Maximum depth exceeded or node is a terminal node (no children)
+    // si on atteint la profondeur max ou si on atteint un etat de jeux terminal
     if (depth === 0 || children[0].length === 0)
     {
       return [null, sum]
     }
 
-    // Find maximum/minimum from list of 'children' (possible moves)
+    // trouve la valeur maximal/minimal de l'evalutation des coup possible
     let maxValue = Number.NEGATIVE_INFINITY;
     let minValue = Number.POSITIVE_INFINITY;
     let bestMove;
@@ -79,9 +76,7 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
         coup_precedant = currMove;
         let coupAdverse = getAllMoves(game, coup_precedant, 'w')
         let win = win_nul(game, coup_precedant, coupAdverse)
-        let moveColor = game_initial[from[0]][from[1]] > 0 ? 'white' : 'black'
-        let isCheck = check(board, coup_precedant, moveColor)
-        let newSum = evaluateBoard(currMove, game_initial, sum, color, win, isCheck);
+        let newSum = evaluateBoard(currMove, game_initial, sum, color, win);
         let [childBestMove, childValue] = minimax(game, depth - 1,alpha, beta, !isMaximizingPlayer, newSum, color, coup_precedant);
         // on remet le plateau a son etat initial
         game = game_initial
@@ -110,7 +105,7 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
                 beta = childValue;
             }
         }
-        // Alpha-beta pruning
+        // Alpha-beta elagage
         if (alpha >= beta)
         {
             break;
@@ -170,6 +165,7 @@ function playMove(move, board_initial) {
         board[to[0] - 1][to[1]] = 0
       }
     }
+    // on effectue le coup
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
     return board

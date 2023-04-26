@@ -2,7 +2,10 @@ import { legalMove } from "./game.js"
 
 
 
-// fonction pour comparer deux tableaux
+/* 
+ * 
+ * en utilisant le score lier a chaque piece et leurs position
+ */
 function arrayEqual(a, b) {
     if (a.length !== b.length) {
         return false;

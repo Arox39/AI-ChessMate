@@ -91,11 +91,19 @@ let pst_b = {
 let pstOpponent = {'w': pst_b, 'b': pst_w};
 let pstSelf = {'w': pst_w, 'b': pst_b};
 
-/* 
- * Evaluates the board at this point in time, 
- * using the material weights and piece square tables.
+/*
+ * Fonction qui explore de manière récursive tous les coups possibles jusqu'à une certaine profondeur, et évalue le plateau au niveau des feuilles en utilisant l'algorithme minimax avec élagage alpha-bêta.
+ * 
+ * @param {Array} move - mouvement que fait une piece
+ * @param {Number} board_intial - le plateau initial(sans le move appliquer)
+ * @param {Number} prevSum - True si l'IA cherche à maximiser sa valeur, False si elle cherche à minimiser la valeur de l'adversaire.
+ * @param {Number} prevSum - la valeur de la precedente evaluation
+ * @param {String} color - La couleur de l'IA ('b' pour black, 'w' pour white).
+ * @param {Number} win - la valeur de win quand on effectue ce coup
+ * 
+ * @returns {Number} - la nouvelle evaluation du tableau
  */
-export function evaluateBoard (move, board_initial, prevSum, color, win, check) 
+export function evaluateBoard (move, board_initial, prevSum, color, win) 
 {
     let [from, to] = move
 
@@ -110,15 +118,16 @@ export function evaluateBoard (move, board_initial, prevSum, color, win, check)
     {
         return +Infinity
     }
-    // c'est nous qui mettons echec l'autre
-    else if(check && moveColor === color)
-    {
-        prevSum += 60000
-    }
     // c'est l'adversaire qui nous met echec
     else if(check && moveColor !== color)
     {
         prevSum -= 60000
+    }
+    // Change endgame behavior for kings
+    if (prevSum < -1500)
+    {
+        if (movePiece === 'k') {movePiece = 'k_e'}
+        else if (moveCaptured === 'k') {moveCaptured = 'k_e'}
     }
     // Change endgame behavior for kings
     if (prevSum < -1500)

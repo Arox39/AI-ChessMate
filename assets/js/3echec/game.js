@@ -19,7 +19,17 @@ let currentPlayer = 'white'
 // initialisation du dernier coup joué
 let coup_precedant = [[0,0], [0,0]]
 
-// fonction pour comparer deux tableaux
+/* 
+ * Idee principal: compare 2 arrays simple pour savoir si ils sont egaux
+ * 
+ * parametre: 
+ * - a: L'array qui se fait comparer
+ * - b: L'array qui compare
+ * 
+ * retourne: 
+ * - false si les 2 arrays sont differents
+ * - true si les 2 arrays sont egaux
+ */
 function arrayEqual(a, b) {
   if (a.length !== b.length) {
       return false;
@@ -32,7 +42,17 @@ function arrayEqual(a, b) {
   return true;
 }
 
-// fonction pour vérifier si un élément est présent dans un tableau
+/* 
+ * Idee principal: Regarde si un element est dans un array
+ * 
+ * - element:  L'element que l'on va chercher
+ * - array:    l'array dans lequel on va regarder
+ * 
+ * retourne: 
+ * - false si l'element n'est pas dans l'array
+ * - true si l'element est dedans
+ */
+
 function elementInArray(element, array) {
   for(let i = 0; i < array.length; i++){
       if(arrayEqual(element, array[i])){
@@ -42,7 +62,9 @@ function elementInArray(element, array) {
   return false
 }
 
-// fonction pour passer au joueur suivant
+/* 
+ * Idee principal: change le joueur qui doit jouer 
+ */
 function switchPlayer() {
     if (currentPlayer === 'white') {
         currentPlayer = 'black'
@@ -51,12 +73,20 @@ function switchPlayer() {
     }
 }
 
+/* 
+ * Idee principal: recupere tout les coups possible et legaux pour tout les pions d'une couleur
+ * 
+ * parametre: 
+ * - board:              array qui represente l'etat actuelle du jeux
+ * - coup_precedant:     array qui represente le coup qui vient d'etre jouer
+ * - color:              string (soit 'white' soit 'black') qui nous dit la couleur des pieces qu'on veut avoir
+ * - rook:               booleen qui nous dit si on veut regarder si le rook et legaux
+ * 
+ * 
+ * retourne: 
+ * - un array qui contient tous les coups possible et legaux pour les pieces de `color`
+ */
 export function legalMove(board, coup_precedant, color, rook){
-  /*
-  parametres : board : 8liste avec 8 argument dans une liste
-  fonction qui devra retourne tout les coup legaux
-
-  */    
   let coup_legal = []
   coup_legal.push(...clouage(board, color, coup_precedant))
   coup_legal.push(...anti_suicide(board,coup_precedant, color))
@@ -89,7 +119,17 @@ export function legalMove(board, coup_precedant, color, rook){
 return coup_legal
 }
 
-// fonction appelée à la fin du jeu pour désactiver les clics sur les cases
+/* 
+ * Idee principal: affiche le pop up qui nous indique comment et qui a gagner la partie
+ * 
+ * parametre: 
+ * - winner:      String qui nous dit la couleur du gagnant ou si il y a nulle (soit 'white' soit 'black' soit 'draw')
+ * - cause:       String qui nous dit pour quelle raison le gagnant a gagner
+ * 
+ * 
+ * retourne: 
+ * - appel la fonction game avec comme paramtere true pour que ca arrete le jeux
+ */
 function endgame(winner, cause) {
   let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
   cells.forEach(cell => {
@@ -112,101 +152,152 @@ function endgame(winner, cause) {
   }
   state.textContent = title
   causeTxt.textContent = `Par ${cause}`
-  return;
+  game(true)
 }
-// fonction pour jouer un coup sur le plateau de jeu
+/* 
+ * Idee principal: fait bouger une pieces en fonction de sont mouvements associer
+ * 
+ * parametre: 
+ * - move:      array qui contient les coordonner de depart et d'arriver du mouvements
+ * 
+ * 
+ * retourne: 
+ * - rien, fait juste les changement necessaire sur le plateau
+ */
 function playMove(move) {
+  // on enleve la couleur sur l'ancien coup_precedant
   let caseDepartPrecedant = document.getElementById(`${coup_precedant[0][0]}-${coup_precedant[0][1]}`)
   caseDepartPrecedant.classList.remove('prevMove')
   let caseArriverPrecedant = document.getElementById(`${coup_precedant[1][0]}-${coup_precedant[1][1]}`)
   caseArriverPrecedant.classList.remove('prevMove')
 
-    let [from, to] = move
-    let piece = board[from[0]][from[1]]
+  // separe l'array move en 2 separer
+  let [from, to] = move
+  // selectionne la piece qui bouge
+  let piece = board[from[0]][from[1]]
 
-    let caseDepart = document.getElementById(`${from[0]}-${from[1]}`)
-    let caseArriver = document.getElementById(`${to[0]}-${to[1]}`)
-    if(piece === 1){
-      // prise en passant
-      if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
-        board[to[0] + 1][to[1]] = 0
-      }
-    }
-    else if(piece === -1){
-      // promotion (on prend la reine direct pour l'IA pour pas tout compliquer)
-      if(to[0] === 7) piece = -8
-      // prise en passant 
-      if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
-        board[to[0] - 1][to[1]] = 0
-      }
-    }
-    // deplace la tour si il y a un rook
-    let rowRook = currentPlayer === 'white' ? 7 : 0
-    let rook = currentPlayer === 'white' ? 4 : -4
-    // ici a la place de faire arrayEqual([from, to], [[rowRook, 4], [rowRook, 2]]) 
-    // on fait en plusieur morceau car la fonction n'aime pas les arrays d'array
-    if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 2])){
-      board[rowRook][3] = rook
-      board[rowRook][0] = 0
-    }
-    else if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 6])){
-      board[rowRook][5] = rook
-      board[rowRook][7] = 0
-    }
+  // selectionne les elements du DOM correspondant a from et to
+  let caseDepart = document.getElementById(`${from[0]}-${from[1]}`)
+  let caseArriver = document.getElementById(`${to[0]}-${to[1]}`)
 
-    // on met de la couleur a la case d'arriver et de depart pour que le coup qui vient d'etre jouer
-    // soit plus facilement identifiable
-    caseDepart.classList.add('prevMove')
-    caseArriver.classList.add('prevMove')
-    // on effectue le mouvement dans notre array
-    board[to[0]][to[1]] = piece
-    board[from[0]][from[1]] = 0
-    // Enregistrer le coup précédent
-    coup_precedant = [[from[0], from[1]], [to[0], to[1]]]
+  if(piece === 1){
+    // prise en passant
+    if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
+      board[to[0] + 1][to[1]] = 0
+    }
+  }
+  else if(piece === -1){
+    // promotion (on prend la reine direct pour l'IA pour pas tout compliquer)
+    if(to[0] === 7) piece = -8
+    // prise en passant 
+    if(from[1] !== to[1] && board[to[0]][to[1]] === 0){
+      board[to[0] - 1][to[1]] = 0
+    }
+  }
+  // deplace la tour si il y a un rook
+  let rowRook = currentPlayer === 'white' ? 7 : 0
+  let rook = currentPlayer === 'white' ? 4 : -4
+  // ici a la place de faire arrayEqual([from, to], [[rowRook, 4], [rowRook, 2]]) 
+  // on fait en plusieur morceau car la fonction n'aime pas les arrays d'array
+  if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 2])){
+    board[rowRook][3] = rook
+    board[rowRook][0] = 0
+  }
+  else if(arrayEqual(from, [rowRook, 4]) && arrayEqual(to, [rowRook, 6])){
+    board[rowRook][5] = rook
+    board[rowRook][7] = 0
+  }
 
-     // Supprimer tous les coups possibles affichés
-     let possibleMoves = document.querySelectorAll('.possibleMove')
-     possibleMoves.forEach(pElement => {
-       pElement.classList.remove('possibleMove')
-     })
+  // on met de la couleur a la case d'arriver et de depart pour que le coup qui vient d'etre jouer
+  // soit plus facilement identifiable
+  caseDepart.classList.add('prevMove')
+  caseArriver.classList.add('prevMove')
+  // on effectue le mouvement dans notre array
+  board[to[0]][to[1]] = piece
+  board[from[0]][from[1]] = 0
+  // Enregistrer le coup précédent
+  coup_precedant = [[from[0], from[1]], [to[0], to[1]]]
 
-     let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
-     if (check(board, coup_precedant, currentPlayer)) {
-       let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
-       king.classList.add('check')
-       currentPlayer === 'white' ? echecRoiNoir++ : echecRoiBlanc++
-     }
-     else if(document.querySelector('.check'))document.querySelector('.check').classList.remove('check')
-      let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
-      let echecRoiAdverse = currentPlayer === 'white' ? echecRoiNoir : echecRoiBlanc
-      let win = win_nul(board, coup_precedant, legalMovesAdverse, echecRoiAdverse)
-      
-      if(echecRoiAdverse === 3) endgame(currentPlayer, '3 Échec')
-      else if(win === 1) endgame(currentPlayer, 'Échec et mat')
-      else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
-      else if(win === -1) endgame('draw', 'Matériel insuffisant')
+  // Supprimer tous les coups possibles affichés
+  let possibleMoves = document.querySelectorAll('.possibleMove')
+  possibleMoves.forEach(pElement => {
+    pElement.classList.remove('possibleMove')
+  })
+
+  let colorAdverse = currentPlayer === 'white' ? 'black' : 'white'
+  // si on a mis echec l'adversaire avec ce mouvements
+  if (check(board, coup_precedant, currentPlayer)) {
+    let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
+    king.classList.add('check')
+    // on incremente le compteur d'echec
+    currentPlayer === 'white' ? echecRoiNoir++ : echecRoiBlanc++
+  }
+  // si il y a pas echec et que il y a une case qui a la classe echec, on enleve sa classe
+  else if(document.querySelector('.check'))document.querySelector('.check').classList.remove('check')
+  let legalMovesAdverse = legalMove(board, coup_precedant, colorAdverse, true)
+  let echecRoiAdverse = currentPlayer === 'white' ? echecRoiNoir : echecRoiBlanc
+  let win = win_nul(board, coup_precedant, legalMovesAdverse, echecRoiAdverse)
+  // on regarde si il y a une fin de partie
+  if(echecRoiAdverse === 3) endgame(currentPlayer, '3 Échec')
+  else if(win === 1) endgame(currentPlayer, 'Échec et mat')
+  else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
+  else if(win === -1) endgame('draw', 'Matériel insuffisant')
+
+
 }
 
 
 // fonction principale du jeu
 export function game(){
+
+  // fonction setTimeout qui exécute le code après un délai de 10 millisecondes
   setTimeout(() => {
+
+    // si c'est au tour du joueur noir
     if(currentPlayer === 'black'){
+
+      // calcul du meilleur coup à jouer avec l'algorithme minimax (profondeur = 2)
+      // la variable "best_move" contient le coup à jouer sous la forme [depart, arrivee, promotion] 
+      // "board" est le tableau représentant l'état actuel du jeu
+      // "-Infinity" et "+Infinity" représentent les bornes pour l'alpha-beta pruning
+      // "true" indique que c'est au tour du joueur noir
+      // "0" est la valeur initiale pour la profondeur
+      // "'b'" est la lettre représentant le dernier coup joué
+      // "coup_precedant" est une variable qui stocke le dernier coup joué
       let best_move = minimax(board, 2, -Infinity, +Infinity, true, 0, 'b', coup_precedant)[0]
+
+      // exécution du coup
       playMove(best_move)
+
+      // actualisation de l'affichage du plateau de jeu
       refreshBoard(board)
+
+      // changement de joueur
       switchPlayer()
+
+      // calcul des coups légaux de l'adversaire
       let legalMovesAdverse = legalMove(board, coup_precedant, 'white', true)
+
+      // vérification s'il y a un échec et mat ou une situation de pat ou de matériel insuffisant
       let win = win_nul(board, coup_precedant, legalMovesAdverse, echecRoiBlanc)
+
+      // si le roi blanc est en échec depuis 3 tours
       if(echecRoiBlanc === 3) endgame('black', '3 Échec')
+
+      // si le joueur noir gagne par échec et mat
       else if(win === 1) endgame('black', 'Échec et mat')
+
+      // si la partie est nulle par pat
       else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
+
+      // si la partie est nulle par matériel insuffisant
       else if(win === -1) endgame('draw', 'Matériel insuffisant')
     }
     
     // récupération des cases appartenant au joueur courant
     let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
     cells.forEach(cell => {
+
       // ajout d'un événement de clic sur chaque case
       cell.addEventListener('click', cellListener)
     })

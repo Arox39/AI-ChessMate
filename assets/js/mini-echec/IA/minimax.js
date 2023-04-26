@@ -1,5 +1,5 @@
 import { legalMove } from "../game.js";
-import { win_nul } from "../../classique/win_nul.js";
+import { win_nul } from "../win_nul.js";
 import { evaluateBoard } from "./eval.js";
 
 function arrayEqual(a, b) {
@@ -19,36 +19,37 @@ function arrayEqual(a, b) {
 
 
 /*
- * Performs the minimax algorithm to choose the best move: https://en.wikipedia.org/wiki/Minimax (pseudocode provided)
- * Recursively explores all possible moves up to a given depth, and evaluates the game board at the leaves.
+ * Explore recursivement tout les coups possibles jusqu'a une certaine profondeur, et evalue le plateau au niveau des feuilles
  * 
- * Basic idea: maximize the minimum value of the position resulting from the opponent's possible following moves.
+ * Idee principal : maximize la valeur minimum de la position resultant des coups possibles de l'adversaire.
  * 
- * Inputs:
+ * Parametre:
  *  - game:                 the game object.
- *  - depth:                the depth of the recursive tree of all possible moves (i.e. height limit).
- *  - isMaximizingPlayer:   true if the current layer is maximizing, false otherwise.
- *  - sum:                  the sum (evaluation) so far at the current layer.
- *  - color:                the color of the current player.
+ *  - depth:                la profondeur a laquelle le minimix va au maximum.
+ *  - alpha & beta:         sert a elaguer les branches inutile   
+ *  - isMaximizingPlayer:   true si on maximise, false si on minimise.
+ *  - sum:                  la somme (l'evalutation) du plateau actuelle
+ *  - color:                la couleur de l'IA
+ *  - coup_precedant:       le coup jouer juste avant
  * 
- * Output:
- *  the best move at the root of the current subtree.
+ * retourne :
+ *  le meilleur coup a jouer
  */
 export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color, coup_precedant)
 {
 
     let children = getAllMoves(game, coup_precedant, isMaximizingPlayer ? 'b' : 'w')
-    // Sort moves randomly, so the same move isn't always picked on ties
+    // trie children au hazard pour pas que ce soit toujours le meme choisi entre 2 meme coup
     children[0].sort(function(a, b){return 0.5 - Math.random()});
     
     let currMove;
-    // Maximum depth exceeded or node is a terminal node (no children)
+    // si on atteint la profondeur max ou si on atteint un etat de jeux terminal
     if (depth === 0 || children[0].length === 0)
     {
       return [null, sum]
     }
 
-    // Find maximum/minimum from list of 'children' (possible moves)
+    // trouve la valeur maximal/minimal de l'evalutation des coup possible
     let maxValue = Number.NEGATIVE_INFINITY;
     let minValue = Number.POSITIVE_INFINITY;
     let bestMove;
@@ -107,7 +108,7 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
                 beta = childValue;
             }
         }
-        // Alpha-beta pruning
+        // Alpha-beta elagage
         if (alpha >= beta)
         {
             break;
@@ -167,6 +168,7 @@ function playMove(move, board_initial) {
         board[to[0] - 1][to[1]] = 0
       }
     }
+    // on effectue le coup
     board[to[0]][to[1]] = piece
     board[from[0]][from[1]] = 0
     return board

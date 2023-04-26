@@ -1,3 +1,12 @@
+/*
+
+
+*/
+
+
+
+
+
 export function init(){
   let wPieces = [4, 3, 2, 8, 255, 2, 3, 4];
   let bPieces = [-4, -3, -2, -8, -255, -2, -3, -4];
