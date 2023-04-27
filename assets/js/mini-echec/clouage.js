@@ -71,8 +71,8 @@ export function clouage(board, color, coup_precedant){
 
 
     let roi;
-    for(let row = 0; row < 8; row++){
-        for( let col = 0; col < 8; col++){
+    for(let row = 0; row < 5; row++){
+        for( let col = 0; col < 5; col++){
             // on recherche la position du roi 
             if(board[row][col] === kingValue){
                 roi = [row,col]
@@ -90,8 +90,8 @@ export function clouage(board, color, coup_precedant){
         // on fait jouer un coup a la piece
         board[coup[i][0]][coup[i][1]] = board[coup[i-1][0]][coup[i-1][1]]
         board[coup[i-1][0]][coup[i-1][1]] = 0
-        for(let r = 0; r < 8; r++){
-            for (let c = 0; c < 8; c++){
+        for(let r = 0; r < 5; r++){
+            for (let c = 0; c < 5; c++){
                 // on selection les coups adverse
                 if(pieceAdverse(board[r][c])){
                     coupAdverse.push(...move(board,r,c,[[coup[i - 1][0], coup[i - 1][1]],[coup[i][0], coup[i][1]]]))

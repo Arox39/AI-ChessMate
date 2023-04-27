@@ -67,8 +67,8 @@ export function anti_suicide(board,coup_precedant, color){
     let king;
     let coup_roi
     // on va chercher la position du roi et ses coups possible
-    for(let row = 0; row < 8; row++){
-        for(let col = 0; col < 8; col++){
+    for(let row = 0; row < 5; row++){
+        for(let col = 0; col < 5; col++){
             if (board[row][col] === kingValue){
                 // sa position
                 king = [row,col]
@@ -86,8 +86,8 @@ export function anti_suicide(board,coup_precedant, color){
         // fait jouer un coup au roi
         board[coup_roi[i][0]][coup_roi[i][1]] = kingValue
         board[coup_roi[i-1][0]][coup_roi[i-1][1]] = 0
-        for(let r = 0; r < 8; r++){
-            for (let c = 0; c < 8; c++){
+        for(let r = 0; r < 5; r++){
+            for (let c = 0; c < 5; c++){
                 if (pieceAdverse(board[r][c])){
                     coup.push(...move(board,r,c,coup_precedant))
                 }

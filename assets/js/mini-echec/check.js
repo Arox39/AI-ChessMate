@@ -41,8 +41,8 @@ export function check(board,coup_precedant, color){
     let controle_de_case = move(board,coup_precedant[1][0],coup_precedant[1][1], coup_precedant)
 
     // recupere les coordonner du roi adverse
-    for (let row = 0; row < 8; row++){
-        for (let col = 0; col < 8; col++){
+    for (let row = 0; row < 5; row++){
+        for (let col = 0; col < 5; col++){
             if(board[row][col] === kingValue){
                 king = [row,col]
             }
