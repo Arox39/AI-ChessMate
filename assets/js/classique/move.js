@@ -18,7 +18,16 @@ function arrayEqual(a, b) {
     return true;
   }
 
-
+/*
+ * Fonction qui renvoie tout les coups qu'une piece peut faire selon les regles des echecs
+ *
+ * - @param {Array} board: plateau du jeu
+ * - @param {Number} row: la ligne de board ou se trouve la piece a etudier
+ * - @param {Number} col: la colonne de board ou se trouve la piece a etudier
+ * - @param {Array} prevMove: coordonner du coup precedant
+ * 
+ * - @returns {Array} contient tout les coup d'une pieces 
+ */
 export function move(board, row, col, prevMove){
     let position_initial = [row,col]
     let coup = []

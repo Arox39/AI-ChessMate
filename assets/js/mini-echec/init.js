@@ -1,3 +1,5 @@
+// fonction qui initalise le plateau de base, virtuel et non-virtuelle
+
 export function init(){
    let chessboard = [
     [0, 0, -3, -4, -255], 
@@ -40,6 +42,7 @@ export function init(){
     document.body.appendChild(table);
     return chessboard
 }
+// fonciton qui actualise le plateau de la page web avec @param {array} chessboard
 export function refreshBoard(chessboard) {
     let correspondance = {
       4: "rook",

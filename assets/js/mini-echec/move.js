@@ -1,4 +1,12 @@
 
+/* 
+ * Fonction qui compare 2 arrays simple pour savoir si ils sont egaux
+ * 
+ * - @param {Array} a: L'array qui se fait comparer
+ * - @param {Array} b: L'array qui compare
+ * 
+ * @returns {Boolean} - true si les 2 array sont egaux - false si non
+ */
 function arrayEqual(a, b) {
     if (a.length !== b.length) {
         return false;
@@ -9,9 +17,18 @@ function arrayEqual(a, b) {
         }
     }
     return true;
-}
+  }
 
-
+/*
+ * Fonction qui renvoie tout les coups qu'une piece peut faire selon les regles des echecs
+ *
+ * - @param {Array} board: plateau du jeu
+ * - @param {Number} row: la ligne de board ou se trouve la piece a etudier
+ * - @param {Number} col: la colonne de board ou se trouve la piece a etudier
+ * - @param {Array} prevMove: coordonner du coup precedant
+ * 
+ * - @returns {Array} contient tout les coup d'une pieces 
+ */
 export function move(board, row, col, prevMove){
     let position_initial = [row,col]
     let coup = []

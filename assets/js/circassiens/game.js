@@ -267,11 +267,8 @@ export function game(engame){
       // vérification s'il y a un échec et mat ou une situation de pat ou de matériel insuffisant
       let win = win_nul(board, coup_precedant, legalMovesAdverse, echecRoiBlanc)
 
-      // si le roi blanc est en échec depuis 3 tours
-      if(echecRoiBlanc === 3) endgame('black', '3 Échec')
-
       // si le joueur noir gagne par échec et mat
-      else if(win === 1) endgame('black', 'Échec et mat')
+      if(win === 1) endgame('black', 'Échec et mat')
 
       // si la partie est nulle par pat
       else if(win === -1 && legalMovesAdverse.length === 0) endgame('draw', 'Pat')
@@ -297,8 +294,6 @@ let moveBRook0 = 0
 let moveWRook0 = 0
 let moveBRook7 = 0
 let moveWRook7 = 0
-let echecRoiBlanc = 0
-let echecRoiNoir = 0
 let departPiece
 game()
 
@@ -413,8 +408,6 @@ rematchBtn.forEach(element => {
   moveWRook0 = 0
   moveBRook7 = 0
   moveWRook7 = 0
-  echecRoiBlanc = 0
-  echecRoiNoir = 0
   // Suppression des coups possibles affichés précédemment
   let possibleMoves = document.querySelectorAll('.possibleMove')
   possibleMoves.forEach(possibleElement => {
