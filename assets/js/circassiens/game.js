@@ -226,8 +226,8 @@ function playMove(move) {
 }
 
 // fonction principale du jeu
-export function game(engame){
-  if(engame)
+export function game(endgame){
+  if(endgame)
   {
     let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
     cells.forEach(cell => 
