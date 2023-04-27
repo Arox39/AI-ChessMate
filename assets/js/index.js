@@ -5,7 +5,7 @@ let rematch = document.querySelectorAll('.rematch')
 let homeBtn = document.querySelectorAll('.home')
 let endgame = document.querySelector('.endgame')
 let xmark = document.querySelector('.fa-xmark')
-// chessBoard.remove()
+
 submit.addEventListener('click', () => {
     const selectElement = document.querySelectorAll('select');
     let variante = selectElement[0].value
