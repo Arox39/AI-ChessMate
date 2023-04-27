@@ -20,15 +20,12 @@ let currentPlayer = 'white'
 let coup_precedant = [[0,0], [0,0]]
 
 /* 
- * Idee principal: compare 2 arrays simple pour savoir si ils sont egaux
+ * Fonction qui compare 2 arrays simple pour savoir si ils sont egaux
  * 
- * parametre: 
- * - a: L'array qui se fait comparer
- * - b: L'array qui compare
+ * - @param {Array} a: L'array qui se fait comparer
+ * - @param {Array} b: L'array qui compare
  * 
- * retourne: 
- * - false si les 2 arrays sont differents
- * - true si les 2 arrays sont egaux
+ * @returns {Boolean} - true si les 2 array sont egaux - false si non
  */
 function arrayEqual(a, b) {
   if (a.length !== b.length) {
@@ -43,14 +40,11 @@ function arrayEqual(a, b) {
 }
 
 /* 
- * Idee principal: Regarde si un element est dans un array
+ * Fonction qui regarde si un element est compris dans un autre array
  * 
- * - element:  L'element que l'on va chercher
- * - array:    l'array dans lequel on va regarder
- * 
- * retourne: 
- * - false si l'element n'est pas dans l'array
- * - true si l'element est dedans
+ * - @param {Array} element: L'element que l'on cherche
+ * - @param {Array} array: l'array dans lequel on regarde si l'element est dedans
+ * - @retrurns {Boolean}: true si element est dans array - false si non
  */
 
 function elementInArray(element, array) {
@@ -63,7 +57,7 @@ function elementInArray(element, array) {
 }
 
 /* 
- * Idee principal: change le joueur qui doit jouer 
+ * Change le joueur qui doit jouer 
  */
 function switchPlayer() {
     if (currentPlayer === 'white') {
@@ -74,24 +68,26 @@ function switchPlayer() {
 }
 
 /* 
- * Idee principal: recupere tout les coups possible et legaux pour tout les pions d'une couleur
+ * Fonctions qui recupere tout les coups possible et legaux pour tout les pions d'une couleur
  * 
- * parametre: 
- * - board:              array qui represente l'etat actuelle du jeux
- * - coup_precedant:     array qui represente le coup qui vient d'etre jouer
- * - color:              string (soit 'white' soit 'black') qui nous dit la couleur des pieces qu'on veut avoir
- * - rook:               booleen qui nous dit si on veut regarder si le rook et legaux
+ * - @param {Array} board: represente l'etat actuelle du jeux
+ * - @param {Array} coup_precedant: represente le coup qui vient d'etre jouer
+ * - @param {string} color: (soit 'white' soit 'black') qui nous dit la couleur des pieces qu'on veut avoir
+ * - @param {Boolean} rook: nous dit si on veut regarder si le rook et legaux
  * 
- * 
- * retourne: 
- * - un array qui contient tous les coups possible et legaux pour les pieces de `color`
+ *  
+ * - @returns {array}: contient tous les coups possible et legaux pour les pieces de `color`
  */
 export function legalMove(board, coup_precedant, color, rook){
+  // on intialise coup_legal
   let coup_legal = []
+  // on lui ajoute les valeurs de clouage et de anti_suicide
   coup_legal.push(...clouage(board, color, coup_precedant))
   coup_legal.push(...anti_suicide(board,coup_precedant, color))
 
+  // si on regarde si on peut faire rook
   if(rook){
+    // on initialise des variable qui changent selon la couleur
     let mKing
     let mRook0
     let mRook7
@@ -108,6 +104,7 @@ export function legalMove(board, coup_precedant, color, rook){
       mRook7 = moveBRook7
       rowRook = 0
     }
+    // on regarde si il y a rook
     if(petit_rook(board, mKing, mRook7, currentPlayer)){
       coup_legal.push(...[[rowRook, 4],[rowRook, 6]])
     }
@@ -120,21 +117,16 @@ return coup_legal
 }
 
 /* 
- * Idee principal: affiche le pop up qui nous indique comment et qui a gagner la partie
+ * Fonction qui affiche le pop up qui nous indique comment et qui a gagner la partie
  * 
- * parametre: 
- * - winner:      String qui nous dit la couleur du gagnant ou si il y a nulle (soit 'white' soit 'black' soit 'draw')
- * - cause:       String qui nous dit pour quelle raison le gagnant a gagner
+ *  
+ * - @param {String} winner: nous dit la couleur du gagnant ou si il y a nulle (soit 'white' soit 'black' soit 'draw')
+ * - @param {String} cause: nous dit pour quelle raison le gagnant a gagner
  * 
  * 
- * retourne: 
- * - appel la fonction game avec comme paramtere true pour que ca arrete le jeux
+ * - @returns {fonction} appel la fonction game avec comme parametere true pour que ca arrete le jeux
  */
 function endgame(winner, cause) {
-  let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
-  cells.forEach(cell => {
-    cell.removeEventListener('click', cellListener)
-  })
   let endgameElement = document.querySelector('.endgame')
   console.log(endgameElement);
   endgameElement.classList.remove('cacher')
@@ -155,14 +147,9 @@ function endgame(winner, cause) {
   game(true)
 }
 /* 
- * Idee principal: fait bouger une pieces en fonction de sont mouvements associer
+ * Fonction qui fait bouger une pieces en fonction de sont mouvements associer
  * 
- * parametre: 
- * - move:      array qui contient les coordonner de depart et d'arriver du mouvements
- * 
- * 
- * retourne: 
- * - rien, fait juste les changement necessaire sur le plateau
+ * - @params {array} move: les coordonner de depart et d'arriver du mouvements
  */
 function playMove(move) {
   // on enleve la couleur sur l'ancien coup_precedant
@@ -230,7 +217,7 @@ function playMove(move) {
     let king = document.querySelector(`td[data-piece='king'][data-color=${colorAdverse}]`)
     king.classList.add('check')
     // on incremente le compteur d'echec
-    currentPlayer === 'white' ? echecRoiNoir++ : echecRoiBlanc++
+    currentPlayer === 'white' && echecRoiBlanc <= 3 && echecRoiBlanc <= 3 ? echecRoiNoir++ : echecRoiBlanc++
   }
   // si il y a pas echec et que il y a une case qui a la classe echec, on enleve sa classe
   else if(document.querySelector('.check'))document.querySelector('.check').classList.remove('check')
@@ -248,8 +235,16 @@ function playMove(move) {
 
 
 // fonction principale du jeu
-export function game(){
-
+export function game(engame){
+  if(engame)
+  {
+    console.log('test');
+    let cells = document.querySelectorAll(`td[data-color=${currentPlayer}]`)
+    cells.forEach(cell => {
+      cell.removeEventListener('click', cellListener)
+  })
+  return
+  }
   // fonction setTimeout qui exécute le code après un délai de 10 millisecondes
   setTimeout(() => {
 
@@ -382,7 +377,14 @@ async function cellListener() {
   game()
 }
 
-// Fonction qui permet de récupérer la destination choisie par le joueur parmi les mouvements possibles
+
+/* 
+ * Fonction detecte quand le joueur selectionne la case ou il veut deplacer sa piece 
+ * 
+ * - @params {array} possibleMove: contient tout les coups que la piece selectionner peut faire
+ * 
+ * - @returns {array}: renvoie les coordonner du point de destination
+ */
 function getDestination(possibleMove){
   let promises = [];
   possibleMove.forEach(element => {

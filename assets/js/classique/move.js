@@ -1,4 +1,11 @@
-
+/* 
+ * Fonction qui compare 2 arrays simple pour savoir si ils sont egaux
+ * 
+ * - @param {Array} a: L'array qui se fait comparer
+ * - @param {Array} b: L'array qui compare
+ * 
+ * @returns {Boolean} - true si les 2 array sont egaux - false si non
+ */
 function arrayEqual(a, b) {
     if (a.length !== b.length) {
         return false;
@@ -9,7 +16,7 @@ function arrayEqual(a, b) {
         }
     }
     return true;
-}
+  }
 
 
 export function move(board, row, col, prevMove){

@@ -100,10 +100,11 @@ let pstSelf = {'w': pst_w, 'b': pst_b};
  * @param {Number} prevSum - la valeur de la precedente evaluation
  * @param {String} color - La couleur de l'IA ('b' pour black, 'w' pour white).
  * @param {Number} win - la valeur de win quand on effectue ce coup
+ * @param {Boolean} check - true si echec - false si pas
  * 
  * @returns {Number} - la nouvelle evaluation du tableau
  */
-export function evaluateBoard (move, board_initial, prevSum, color, win) 
+export function evaluateBoard (move, board_initial, prevSum, color, win, check) 
 {
     let [from, to] = move
 

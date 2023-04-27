@@ -1,7 +1,7 @@
 import { legalMove } from "../game.js";
 import { win_nul } from "../win_nul.js";
 import { evaluateBoard } from "./eval.js";
-
+import { check } from "../../classique/check.js";
 function arrayEqual(a, b) {
   if (a.length !== b.length) {
       return false;
@@ -75,8 +75,10 @@ export function minimax(game, depth, alpha, beta, isMaximizingPlayer, sum, color
 
         coup_precedant = currMove;
         let coupAdverse = getAllMoves(game, coup_precedant, 'w')
+        let colorAdverse = board[from[0]][from[1]] < 0 ? 'black' : 'white'
         let win = win_nul(game, coup_precedant, coupAdverse)
-        let newSum = evaluateBoard(currMove, game_initial, sum, color, win);
+        let isCheck = check(board, coup_precedant, colorAdverse)
+        let newSum = evaluateBoard(currMove, game_initial, sum, color, win, isCheck);
         let [childBestMove, childValue] = minimax(game, depth - 1,alpha, beta, !isMaximizingPlayer, newSum, color, coup_precedant);
         // on remet le plateau a son etat initial
         game = game_initial
